@@ -1,0 +1,23 @@
+[project]
+name = "deux2025-music-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=1.5.1",
+    "ipykernel>=7.2.0",
+    "loguru>=0.7.3",
+    "matplotlib>=3.10.8",
+    "pandas>=3.0.2",
+    "requests>=2.33.1",
+    "seaborn>=0.13.2",
+    "streamlit>=1.56.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "ruff>=0.15.8",
+    "black>=26.3.1"
+]
