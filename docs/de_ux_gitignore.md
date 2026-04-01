@@ -1,4 +1,5 @@
-# basic .gitignore som täcker allting vi kan tänka oss och som ej läcker det viktiga och onödigt skräp
+# Förslag på basic .gitignore som täcker allting vi kan tänka oss och som ej läcker det viktiga och onödigt skräp
+(Som Kokchun+Debbie kommer uppskatta)
 
 
 # --- Secrets & Credentials (CRITICAL) ---
@@ -41,11 +42,10 @@ __pycache__/
 *.duckdb
 *.db
 
-# --- Medallion Data Folders (ALDRIG I GIT) --- KAN KOMMA ATT ÄNDRAS VID BEHOV
-# KOMMER ÄNDRAS MED TIDEN
-#data/bronze/
-#data/silver/
-#data/gold/
+# --- Medallion Data Folders (ALDRIG I GIT) ---
+data/bronze/
+data/silver/
+data/gold/
 
 # --- Local Databases ---
 *.sqlite
