@@ -2,7 +2,7 @@
 
 
 ```bash
-dataviz-project/
+datavis-project/
 │
 ├── data/                   # Ignoreras av Git (.gitignore)
 │   ├── bronze/             # Rådata från valt API/Kaggle (Parquet/CSV)
@@ -25,9 +25,9 @@ dataviz-project/
 │   └── storytelling/       # Data storytellinggrafer i matplotlib
 │
 ├── docs/                   # Docs för ex, module_overviews, session tracking, todo etc.
-│   ├── XYZ/              
-│   ├── XYZ/              
-│   └── XYZ/
+│   ├── modeling/           # Plats för ERDs              
+│   ├── modules/            # Plats för docs i form av module_overviews              
+│   └── sessions/           # Plats för session tracking dag för dag för utvecklare
 │
 ├── tests/                  # Unit tests + andra tests
 │
