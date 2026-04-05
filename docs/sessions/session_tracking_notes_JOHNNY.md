@@ -19,6 +19,8 @@
 - Do basic query with duckdb on .parquet file
     - **Done**
 
+- Added 'bare bones' CI pipeline to run linting and formatting with Ruff.
+    - **Done**
 
 - https://www.kaggle.com/datasets/edumucelli/spotifys-worldwide-daily-song-ranking
     - Ongoing
