@@ -43,9 +43,8 @@ __pycache__/
 
 # --- Medallion Data Folders (ALDRIG I GIT) --- KAN KOMMA ATT ÄNDRAS VID BEHOV
 # KOMMER ÄNDRAS MED TIDEN
-data/bronze/
-data/silver/
-data/gold/
+data/raw/
+
 
 # --- Local Databases ---
 *.sqlite
