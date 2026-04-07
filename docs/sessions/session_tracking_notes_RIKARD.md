@@ -8,16 +8,16 @@
     - **Done**
 
 - Do EDA on dataset
-    - Ongoing
+    - **Done**
 
 - Write EDA insights about dataset
     - Ongoing
 
 - Write cleaned data and save it to Silver(Processed) layer in repo as .parquet file.
-    - Ongoing
+    - **Done**
 
 - Do basic query with duckdb on .parquet file
-    - Ongoing
+    - **Done**
 
 - Added 'bare bones' CI pipeline to run linting and formatting with Ruff.
     - Ongoing
