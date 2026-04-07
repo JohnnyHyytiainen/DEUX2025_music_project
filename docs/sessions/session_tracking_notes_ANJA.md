@@ -13,3 +13,7 @@
 - Write EDA insights about dataset
     - **Done**
 
+- Started EDA on https://www.kaggle.com/datasets/dhruvildave/spotify-charts
+    - **Done**
+- Write EDA insights about dataset
+    - **Done**
