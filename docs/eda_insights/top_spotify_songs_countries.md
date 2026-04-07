@@ -129,3 +129,90 @@ dtype: int64
 
 # Insights from NATIONAL-EDA on top spotify songs in 73 countries dataset.
 
+## What country listens to the most explicit songs according to spotifys universal dataset?
+
+```
+Worlds top 10 most 'Explicit' Nations according to Spotifys data:
+country  explicit_percentage  total_unique_songs
+     GR                 68.5                 904
+     CL                 64.4                 597
+     DO                 60.8                 873
+     MX                 57.3                 495
+     SK                 56.4                 944
+     FR                 54.1                 903
+     BY                 52.9                 772
+     SV                 51.6                 572
+     GT                 51.5                 443
+     CZ                 50.7                 845
+```
+
+- Results and insights of explicit music analysis:
+```text
+Greece (GR) in first place with 68.5%! Who would have guessed it? Over two-thirds(2/3) of the music on their top list has an "Explicit" stamp.
+
+Latin America dominates: Chile (CL), Dominican Republic (DO), Mexico (MX), El Salvador (SV) and Guatemala (GT).
+
+Insights: Latin American hiphop and reggaeton, which often have explicit lyrics are incredibly dominant globally, and its clearly visible in this dataset.
+
+
+Europes unexpected contributions: Slovakia (SK), France (FR), Belarus (BY) and the Czech Republic (CZ). 
+
+Insights: The French and Eastern European rap scene in particular seems to be pushing these numbers up.
+
+No Nordic countries (SE, NO, DK, FI) in the top 10. We up in the north seem to be listening to a bit more "clean" music, or at least music that isnt flagged as heavily by Spotify.
+```
+
+
+# What countries are the happiest, saddest (Valence) and likes the highest tempo? (BPM)
+```text
+The Kings of Joy (Latin America and... Japan?): 
+
+Latin America completely dominates the joy list. Mexico (MX), Uruguay (UY), Brazil (BR). The results are clear that genres like reggaeton, cumbia and Brazilian funk lift the mood extremely. But that Japan (JP) sneaks in at fifth place? That is a wonderful AND a very unexpected insight! J-pop is often extremely upbeat and colorful.
+
+
+The Heartbreak Belt (Southeast Asia): 
+
+The "depressed" list (lowest valence) is completely dominated by Southeast Asia: Indonesia (ID), Malaysia (MY), Vietnam (VN), Taiwan (TW). There is a massive music culture in these countries around extremely emotional power ballads and heartbreak songs (in Indonesia it is often called "Galau" music apparently). Its also very interesting that the USA (US) is in the top 10 most depressed! A lot of moody trap and melancholic pop there right the previous years.
+
+
+The Techno & Eurodance axis (BPM): 
+
+Here we see what most of us could expect. Eastern and Central Europe crushes all opposition when it comes to tempo. Bulgaria (BG), Romania (RO), Czech Republic (CZ), Slovakia (SK), Austria (AT) and Germany (DE). Here, pumping bass, house, techno and fast paced electronic music are as always the order of the day!
+
+
+Odd detail to further investigate: Look at Slovakia (SK) and the Czech Republic (CZ). They are in the top 10 most depressing, BUT at the same time top 10 fastest. Fast but sad music? It smells like intense, melancholic electronic music or hard rock by a long way! Needs to be investigated more with genres!
+```
+
+## Crushing the happiness == BPM myth!
+```text
+Insights and an odd mythbuster. 
+
+Fast music ≠ Happy music.
+The fact that the trend line is pointing downwards is a fantastic insight! If you think about it purely musically, it actually makes sense when we look at a global scale:
+
+High BPM but Low Joy: 
+Think intense, dark techno, hard rock/metal, or stressful and aggressive trap-hip-hop. The tempo may be 140+ BPM, but the mood (valence) is dark, angry or melancholic.
+
+Low BPM but High Joy: 
+Think reggae, lo-fi beats, or a cozy acoustic summer song. The tempo simmers at a leisurely 80 BPM, but the music is extremely positive and uplifting.
+
+---
+
+If my findings are correct We've just busted a myth in the data. Fast tempo doesnt mean happy music – in fact, its the opposite. If youre building a 'mood filter' in the app, BPM and Happiness need to be two completely separate controls!"
+```
+
+
+## The nordic "vibe wars"
+
+```text
+The Northern War: 
+
+Swedens Embarrassing Loss..
+Hahaha, I have to laugh at the bar chart! If you look at the results, they defy all stereotypes:
+
+Finland (Red) are the happy bundles of energy! People often joke that Finns are quiet and melancholic, but their charts absolutely crush the rest of the Nordics in both Joy and Energy.
+
+Denmark (Yellow) owns the dance floor. They have the highest Danceability. (Maybe its all their Danish club music and sausage pop?)
+
+Sweden (Green)... We are the most depressed and tired. We are last in both Valence and Energy. Our charts are filled with melancholic pop, dark hip hop and EPA dunk.
+```
