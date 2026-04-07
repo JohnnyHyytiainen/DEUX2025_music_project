@@ -20,7 +20,29 @@
     - **Done**
 
 - Added 'bare bones' CI pipeline to run linting and formatting with Ruff.
+    - **Done** NOTE: Didnt work as intended therefore removal was needed.
+
+---
+
+**Tuesday 07/04-2026:**
+*Goals for today*
+- Branch out, start doing national EDA for: https://www.kaggle.com/datasets/asaniczka/top-spotify-songs-in-73-countries-daily-updated/versions/493 
     - **Done**
+
+- Make proper dateformat for Global data instead of month it should be yyyy/mm/dd.
+    - Updated plots
+    - Updated clean data
+    - Updated with .csv and .parquet
+        - **Done**
+        - **Done**
+        - **Done**
+
+
+
+
+
+
+# Remaining datasets.
 
 - https://www.kaggle.com/datasets/edumucelli/spotifys-worldwide-daily-song-ranking
     - Ongoing
