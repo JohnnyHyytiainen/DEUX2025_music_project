@@ -30,7 +30,12 @@
     - *ongoing*
 
 - Make proper dateformat for Global data instead of month it should be yyyy/mm/dd.
-    - *ongoing*
+    - Updated plots
+    - Updated clean data
+    - Updated with .csv and .parquet
+        - **Done**
+        - **Done**
+        - **Done**
 
 
 
