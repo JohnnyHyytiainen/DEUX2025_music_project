@@ -1,4 +1,4 @@
-# Insights from EDA(Exploratory Data Analysis) on top spotify songs in 73 countries dataset.
+# Insights from EDA(Exploratory Data Analysis) on top spotify songs in 73 countries dataset. GLOBAL
 
 ```
 This dataset(several versions) presents the top songs currently trending for over 70 countries where the top 50 songs for each country is updated daily up to 2025-06-11. The purpose of this dataset according to kaggle is to provide the most up to date information on the popularity of songs accross the world.
@@ -125,3 +125,7 @@ time_signature          0
 month                   0
 dtype: int64
 ```
+
+
+# Insights from NATIONAL-EDA on top spotify songs in 73 countries dataset.
+
