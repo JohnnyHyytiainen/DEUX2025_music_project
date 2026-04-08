@@ -39,7 +39,13 @@
 
 
 
+**Wednesday 08/04-2026**
+*Goals for today*
+- Make an ERD for how db could look like.
+    - Ongoing
 
+- Start setting up a database for us to use
+    - Ongoing
 
 
 # Remaining datasets.
