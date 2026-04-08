@@ -5,9 +5,6 @@ import duckdb
 import os
 
 
-import duckdb
-import os
-
 # ==========================================
 # KONSTANTER RÖR EJ
 # ==========================================
