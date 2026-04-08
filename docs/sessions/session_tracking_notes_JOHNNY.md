@@ -47,6 +47,9 @@
 - Start setting up a database for us to use
     - **Done**
 
+- Ingest all clean and standardised datasets with matching column names across all datasets
+    - **Done**
+
 
 # Remaining datasets.
 
