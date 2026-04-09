@@ -50,6 +50,10 @@
 - Ingest all clean and standardised datasets with matching column names across all datasets
     - **Done**
 
+**Thursday 08/04-2026**
+*Goals for today*
+- Start setting up streamlit for repo so that we have it done
+    - **Done**
 
 # Remaining datasets.
 
