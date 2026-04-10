@@ -2,7 +2,6 @@
 # Kod: Engelska
 # Script för att initiera vår databas
 import duckdb
-import os
 
 
 # ==========================================
@@ -14,6 +13,7 @@ PARQUET_PATH_DAILY = (
 )
 PARQUET_PATH_CHARTS = "../data/processed/spotify_historical_charts.parquet"
 PARQUET_PATH_TOP = "../data/processed/spotify_top_200_historical.parquet"
+PARQUET_PATH_SALES = "../data/processed/historical_media_sales.parquet"
 
 
 def init_database():
@@ -43,11 +43,17 @@ def init_database():
     SELECT * FROM '{PARQUET_PATH_TOP}'
     """
 
+    query_d = f"""
+    CREATE OR REPLACE TABLE silver_music_format_sales AS
+    SELECT * FROM '{PARQUET_PATH_SALES}'
+    """
+
     try:
         print("Reading in .Parquet file and building table. This will go QUICK..")
         con.execute(query_a)
         con.execute(query_b)
         con.execute(query_c)
+        con.execute(query_d)
 
         # Validering: Kolla hur många rader som faktiskt gick in
         count_a = con.execute("SELECT COUNT(*) FROM silver_spotify_daily").fetchone()[0]
@@ -70,6 +76,14 @@ def init_database():
 
         print("SUCCESS!")
         print(f"Table 'silver_top_200_historical' is created with: {count_c} rows.")
+
+        # Validering: Kolla hur många rader som faktiskt gick in
+        count_d = con.execute(
+            "SELECT COUNT (*) FROM silver_music_format_sales"
+        ).fetchone()[0]
+
+        print("SUCCESS!")
+        print(f"Table 'silver_music_format_sales' is created with: {count_d} rows.")
 
     except Exception as e:
         print(f"Error occured while setting up database: {e}")

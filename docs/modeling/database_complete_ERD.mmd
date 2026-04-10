@@ -1,0 +1,77 @@
+erDiagram
+    %% Relationer (Hur tabellerna pratar med varandra)
+    SILVER_SPOTIFY_DAILY ||--o{ SILVER_HISTORICAL_CHARTS : "Join via name & artists"
+    SILVER_SPOTIFY_DAILY ||--o{ SILVER_TOP_200_HISTORICAL : "Join via spotify_id"
+    
+    %% Notera: MEDIA_SALES är en "friflygande" dimensionstabell aggregerad på År, 
+    %% så den har ingen direkt tvingande Foreign Key mot en specifik låt.
+
+    SILVER_SPOTIFY_DAILY {
+        VARCHAR spotify_id "Unikt ID för låten"
+        VARCHAR name "Låtnamn"
+        VARCHAR artists "Artist(er)"
+        INTEGER daily_rank "Rank idag"
+        INTEGER daily_movement "Förändring från igår"
+        INTEGER weekly_movement "Förändring från förra veckan"
+        VARCHAR country "ISO landskod eller 'Global'"
+        DATE snapshot_date "Datum för rankingen"
+        INTEGER popularity "Spotifys popularity score"
+        BOOLEAN is_explicit "True om barnförbjuden"
+        BIGINT duration_ms "Längd i millisekunder"
+        VARCHAR album_name "Albumnamn"
+        VARCHAR album_release_date "Release-datum för album"
+        DOUBLE danceability "0.0 till 1.0"
+        DOUBLE energy "0.0 till 1.0"
+        INTEGER key "Musikalisk tonart"
+        DOUBLE loudness "Ljudstyrka i dB"
+        INTEGER mode "Dur (1) eller Moll (0)"
+        DOUBLE speechiness "Mängd talade ord"
+        DOUBLE acousticness "0.0 till 1.0"
+        DOUBLE instrumentalness "0.0 till 1.0"
+        DOUBLE liveness "Närvaro av publik"
+        DOUBLE valence "Glädje (0.0 till 1.0)"
+        DOUBLE tempo "BPM (Beats per minute)"
+        INTEGER time_signature "Taktart"
+        INTEGER month "Månad (1-12)"
+        VARCHAR year_month "År och månad (YYYY-MM)"
+    }
+
+    SILVER_HISTORICAL_CHARTS {
+        VARCHAR name "Låtnamn"
+        BIGINT rank "Listplacering"
+        TIMESTAMP snapshot_date "Datum för listan"
+        VARCHAR artists "Artist(er)"
+        VARCHAR country "Land / Region"
+        VARCHAR chart "Listtyp (top200, viral50)"
+        VARCHAR trend "Förändringstrend"
+        DOUBLE streams "Antal streams (NULL för viral50)"
+    }
+
+    SILVER_TOP_200_HISTORICAL {
+        VARCHAR spotify_id "Unikt ID för låten"
+        VARCHAR name "Låtnamn"
+        VARCHAR artists "Artist(er)"
+        BIGINT rank "Placering"
+        TIMESTAMP snapshot_date "Datum"
+        DOUBLE danceability "0.0 till 1.0"
+        DOUBLE energy "0.0 till 1.0"
+        DOUBLE loudness "Ljudstyrka i dB"
+        DOUBLE speechiness "0.0 till 1.0"
+        DOUBLE acousticness "0.0 till 1.0"
+        DOUBLE instrumentalness "0.0 till 1.0"
+        DOUBLE valence "Glädje (0.0 till 1.0)"
+        VARCHAR artist_ind "Artist-indikator"
+        VARCHAR nationality "Artistens nationalitet"
+        VARCHAR continent "Artistens hemkontinent"
+        BIGINT points_total "Totala poäng"
+        DOUBLE points_ind_for_each_artistnat "Poäng för nationalitet"
+        VARCHAR song_url "Länk till låten"
+        BIGINT artist_index "Artist-indexering"
+    }
+
+    SILVER_MEDIA_SALES {
+        VARCHAR format "Ex: CD, Vinyl, Streaming"
+        VARCHAR metric "Ex: Units (Sålda) / Revenue (Pengar)"
+        BIGINT year "Årtal (YYYY)"
+        DOUBLE value "Det faktiska försäljningsvärdet"
+    }
