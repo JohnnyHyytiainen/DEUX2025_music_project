@@ -63,6 +63,12 @@
 - Add proper README.md draft to show tech-stack and explain purpose with DEUX project.
     - **Done**
 
+- Start setting up brief streamlit dashboard with few sample queries divided into:
+    - Landing page:                     - *ONGOING*
+    - Pages:                            - *ONGOING*
+    - components with query functions:  - *ONGOING*
+
+
 
 
 # Remaining datasets that MIGHT be needed / used if needed.
