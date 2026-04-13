@@ -55,13 +55,28 @@
 - Start setting up streamlit for repo so that we have it done
     - **Done**
 
-# Remaining datasets.
+**Monday 13/04-2026**
+*Goals for today*
+- Clean up repo, remove unnecessary folders.
+    - **Done**
+
+- Add proper README.md draft to show tech-stack and explain purpose with DEUX project.
+    - **Done**
+
+- Start setting up brief streamlit dashboard with few sample queries divided into:
+    - Landing page:                     - *ONGOING*
+    - Pages:                            - *ONGOING*
+    - components with query functions:  - *ONGOING*
+
+
+
+
+# Remaining datasets that MIGHT be needed / used if needed.
 
 - https://www.kaggle.com/datasets/edumucelli/spotifys-worldwide-daily-song-ranking
-    - Ongoing
 
 - https://www.kaggle.com/datasets/brunoalarcon123/top-200-spotify-songs-dataset
-    - Ongoing
+
     
 
 
