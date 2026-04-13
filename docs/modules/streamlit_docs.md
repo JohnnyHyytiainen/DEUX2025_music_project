@@ -12,6 +12,8 @@ Streamlit har inbyggt "Native Multipage" stöd. Om du har en mapp som heter `pag
 
 * `src/dashboard/pages/03_Physical_Media.py`: Här lägger vi t.ex analyser om mediaformatet(CD, Vinyl, etc etc)
 
+* `src/dashboard/components/data_loader.py`: Här ligger vår databas motor, denna fil har endast EN uppgift. Vara kontakten till vår databas. För att ej strula med massor av imports och följa DRY principen så importerar vi bara funktionen för DB kontakten. Inget mer, inget mindre.
+
 * `src/dashboard/components/queries_global.py`: Istället för att klottra ner sidorna med hundratals rader SQL, sparar vi våra queries här som funktioner (`def get_top_explicit_query(): return "SELECT..."`) och importerar dem till respektive sida.
 
     - Vi kan göra FLERA `src/dashboard/components/queries_xyz.py` script, går att göra ett/fler queries script för att jobba på samma `/page/XX_script.py`
@@ -30,9 +32,13 @@ Här är de exempel vi kan använda oss utav som mallar för att snabbt förstå
 
 ```text
 dashboard/
-├── app.py                            # Framsidan
+├── app.py                             # Framsidan
 ├── components/
-│   └── data_loader.py                # Vår DRY-motor för databasen
+│    ├── data_loader.py                # Vår DRY-motor för databasen
+│    ├── queries_global.py             # Queries för page 01
+│    └── queries_... ....py            # Queries för page X
+│
+│
 └── pages/
     ├── 01_🌍_Global_EDA.py           # Vår globala analys - (Exempel)  
     ├── 02_📈_Historical_Trends.py    # Vår historiska analys - (Exempel)  
@@ -40,3 +46,7 @@ dashboard/
 ```
 
 Vår `data_loader.py` fil gör **en** sak och har **en** funktion, inget mer. Dess funktion är detta: den pratar med databasen, cachar resultatet och skickar tillbaka en Pandas DataFrame.
+
+
+### Appens framsida. 
+Vår `app.py` fungerar som FRAMSIDA. Här bör vi ej ha några tunga grafer, det är trots allt vår landing page och 'lobby'.
