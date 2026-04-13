@@ -64,9 +64,15 @@
     - **Done**
 
 - Start setting up brief streamlit dashboard with few sample queries divided into:
-    - Landing page:                     - *ONGOING*
-    - Pages:                            - *ONGOING*
-    - components with query functions:  - *ONGOING*
+    - Landing page:                     - **Done**
+    - Pages:                            - **Done**
+    - components with query functions:  - **Done**
+
+- Download ISO country code dataset from Kaggle, clean it and only keep alpha-2 (iso with 2 letters) + country and create a dim table(view table to bypass JOINS)
+    - **Done**
+
+- Create a view table from `dim_geography` table to bypass having to JOIN when querying in streamlit dashboard.
+    - **Done**
 
 
 
