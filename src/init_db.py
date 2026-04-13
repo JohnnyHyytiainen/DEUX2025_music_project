@@ -14,6 +14,7 @@ PARQUET_PATH_DAILY = (
 PARQUET_PATH_CHARTS = "../data/processed/spotify_historical_charts.parquet"
 PARQUET_PATH_TOP = "../data/processed/spotify_top_200_historical.parquet"
 PARQUET_PATH_SALES = "../data/processed/historical_media_sales.parquet"
+PARQUET_PATH_DIM_TABLE = "../data/processed/dim_geography.parquet"
 
 
 def init_database():
@@ -48,12 +49,18 @@ def init_database():
     SELECT * FROM '{PARQUET_PATH_SALES}'
     """
 
+    query_e = f"""
+    CREATE OR REPLACE TABLE dim_geography AS
+    SELECT * FROM '{PARQUET_PATH_DIM_TABLE}'
+    """
+
     try:
         print("Reading in .Parquet file and building table. This will go QUICK..")
         con.execute(query_a)
         con.execute(query_b)
         con.execute(query_c)
         con.execute(query_d)
+        con.execute(query_e)
 
         # Validering: Kolla hur många rader som faktiskt gick in
         count_a = con.execute("SELECT COUNT(*) FROM silver_spotify_daily").fetchone()[0]
@@ -84,6 +91,23 @@ def init_database():
 
         print("SUCCESS!")
         print(f"Table 'silver_music_format_sales' is created with: {count_d} rows.")
+
+        # Validering: Kolla hur många rader som faktiskt gick in
+        count_e = con.execute("SELECT COUNT (*) FROM dim_geography").fetchone()[0]
+
+        print("SUCESS!")
+        print(f"Table 'dim_geography' is created with: {count_e} rows.")
+
+        # GOLD LAYER: Skapa Vyn!
+        con.execute("""
+        CREATE OR REPLACE VIEW gold_spotify_daily AS 
+        SELECT 
+            s.*, 
+            g.country_name 
+        FROM silver_spotify_daily s
+        LEFT JOIN dim_geography g ON s.country = g.iso_code;
+        """)
+        print("Database view created: gold_spotify_daily")
 
     except Exception as e:
         print(f"Error occured while setting up database: {e}")
