@@ -21,15 +21,16 @@ def get_top_explicit_query(region: str) -> str:
     if region in region_map:
         where_clause += f" AND country IN {region_map[region]}"
 
-    # Skicka in den dynamiska WHERE satsen i SQL str
+    # Läser ifrån 'gold_spotify_daily' och väljer 'country_name'
+    # Döper det till 'country' i output (AS country) så streamlit koden behöver ej ändras öht.
     return f"""
     SELECT 
-        country,
+        country_name AS country, 
         AVG(CAST(is_explicit AS INT)) * 100 as Explicit_Procent,
         AVG(tempo) as Avg_BPM
-    FROM silver_spotify_daily
+    FROM gold_spotify_daily
     {where_clause}
-    GROUP BY country
+    GROUP BY country_name
     HAVING COUNT(*) > 100
     ORDER BY Explicit_Procent DESC
     LIMIT 10;
@@ -42,12 +43,12 @@ def get_mood_and_tempo_query() -> str:
     """Returns query to get both Valence and tempo per Country"""
     return """
     SELECT 
-        country,
+        country_name AS country,
         AVG(valence) * 100 as happiness_score,
         AVG(tempo) as avg_bpm,
         COUNT(DISTINCT spotify_id) as unique_songs_played
-    FROM silver_spotify_daily
+    FROM gold_spotify_daily
     WHERE country != 'Global'
-    GROUP BY country
+    GROUP BY country_name
     HAVING unique_songs_played > 100
     """
