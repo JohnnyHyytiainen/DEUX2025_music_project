@@ -13,7 +13,7 @@ Our DE team has built a robust, on-premises Data Lakehouse architecture that tra
 
 ## Architecture & Dataflow (Tech Stack)
 
-1. **Extraction & Transformation (Pandas):** Raw data from CSV is washed, type-converted and saved as compressed `.parquet` files in our Silver warehouse.
+1. **Extraction & Transformation (Pandas):** Raw data from CSV is cleaned, type-converted and saved as compressed `.parquet` files in our Silver warehouse.
 
 2. **Data Warehouse (DuckDB):** An idempotent Python script builds a local relational database where data from different sources can be joined lightning fast.
 
@@ -38,8 +38,8 @@ DEUX2025_music_project/
 │   │   └── pages/                  # Dashboard subpages
 │   ├── database/                   # Database script
 │   │   └── init_db.py              # Creates our tables and loads Parquet files
-│   └── data_processing/            # ETL pipelines to wash raw data
-├── pyproject.toml                  # Deroenden and project configuration
+│   └── data_processing/            # ETL pipelines to clean raw data
+├── pyproject.toml                  # Dependencies and project configuration
 └── README.md                       # This file
 ```
 

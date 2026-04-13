@@ -1,10 +1,14 @@
 erDiagram
-    %% Relationer (Hur tabellerna pratar med varandra)
+    %% Relationer
     SILVER_SPOTIFY_DAILY ||--o{ SILVER_HISTORICAL_CHARTS : "Join via name & artists"
     SILVER_SPOTIFY_DAILY ||--o{ SILVER_TOP_200_HISTORICAL : "Join via spotify_id"
-    
-    %% Notera: MEDIA_SALES är en "friflygande" dimensionstabell aggregerad på År, 
-    %% så den har ingen direkt tvingande Foreign Key mot en specifik låt.
+    SILVER_SPOTIFY_DAILY }o--|| DIM_GEOGRAPHY : "Join via country = iso_code"
+
+    %% Fysiska Tabeller
+    DIM_GEOGRAPHY {
+        VARCHAR iso_code "ISO landskod (Primary Key)"
+        VARCHAR country_name "Fullständigt landsnamn"
+    }
 
     SILVER_SPOTIFY_DAILY {
         VARCHAR spotify_id "Unikt ID för låten"
@@ -13,7 +17,7 @@ erDiagram
         INTEGER daily_rank "Rank idag"
         INTEGER daily_movement "Förändring från igår"
         INTEGER weekly_movement "Förändring från förra veckan"
-        VARCHAR country "ISO landskod eller 'Global'"
+        VARCHAR country "ISO landskod (Foreign Key)"
         DATE snapshot_date "Datum för rankingen"
         INTEGER popularity "Spotifys popularity score"
         BOOLEAN is_explicit "True om barnförbjuden"
@@ -68,10 +72,17 @@ erDiagram
         VARCHAR song_url "Länk till låten"
         BIGINT artist_index "Artist-indexering"
     }
-
+    %% Notera: MEDIA_SALES är en "friflygande" dimensionstabell aggregerad på År, 
+    %% så den har ingen direkt tvingande Foreign Key mot en specifik låt.
     SILVER_MEDIA_SALES {
         VARCHAR format "Ex: CD, Vinyl, Streaming"
         VARCHAR metric "Ex: Units (Sålda) / Revenue (Pengar)"
         BIGINT year "Årtal (YYYY)"
         DOUBLE value "Det faktiska försäljningsvärdet"
     }
+
+    GOLD_SPOTIFY_DAILY
+
+    %% Vyn byggs från dessa två tabeller
+    SILVER_SPOTIFY_DAILY ||--|| GOLD_SPOTIFY_DAILY : "Genererar vy"
+    DIM_GEOGRAPHY ||--|| GOLD_SPOTIFY_DAILY : "Genererar vy"
