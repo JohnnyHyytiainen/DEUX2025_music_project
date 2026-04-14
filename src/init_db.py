@@ -98,7 +98,7 @@ def init_database():
         print("SUCESS!")
         print(f"Table 'dim_geography' is created with: {count_e} rows.")
 
-        # GOLD LAYER: Skapa Vyn!
+        # GOLD LAYER: Skapa VIEW FÖR ISO KODER.
         con.execute("""
         CREATE OR REPLACE VIEW gold_spotify_daily AS 
         SELECT 
