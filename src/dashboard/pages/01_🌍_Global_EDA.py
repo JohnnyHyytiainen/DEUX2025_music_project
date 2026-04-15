@@ -1,7 +1,6 @@
 # Globala EDA trender
 # Kommentarer: Svenska
 # Kod: Engelska
-
 import streamlit as st
 
 # Så här sköter vi importen av vår databas motor OCH våra queries mot databasen. EXTREMT CLEANT.
@@ -75,13 +74,13 @@ if not df_mood.empty:
         with col1:
             st.subheader("Topp 10: Gladaste Nationerna")
             st.bar_chart(
-                top_happy.set_index("country")["happiness_score"], color="#FFD700"
+                top_happy.set_index("country")["happiness_score"], color="#3CFF00"
             )
 
         with col2:
             st.subheader("Topp 10: Melankoliska Nationerna")
             st.bar_chart(
-                top_sad.set_index("country")["happiness_score"], color="#4682B4"
+                top_sad.set_index("country")["happiness_score"], color="#00294B"
             )
 
     # === FLIK: TEMPO ===
