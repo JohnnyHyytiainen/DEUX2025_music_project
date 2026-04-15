@@ -47,6 +47,49 @@ if selected_formats:
         # pivot datan för en finare graf
         chart_data = df.pivot(index="year", columns="format", values="value")
 
+        # ========================================
+        # 4. KPI-KORT (Snabba insikter i toppen)
+        # ========================================
+        st.subheader("KPI-Insikter")
+
+        # Skapa tre kolumner bredvid varandra
+        col1, col2, col3 = st.columns(3)
+
+        # Insikt 1: Total volym/värde under vald period
+        total_sum = df["value"].sum()
+
+        # Insikt 2: Vilket format sålde bäst totalt?
+        # Gruppera på format, summera, och plocka ut det med högst värde
+        top_format_series = df.groupby("format")["value"].sum()
+        top_format = top_format_series.idxmax()
+
+        # Insikt 3: Vilket enskilt år (och format) var det absoluta rekordet?
+        # Hitta index för raden med absolut högst 'value'
+        peak_row_index = df["value"].idxmax()
+        peak_year = df.loc[peak_row_index, "year"]
+        peak_value = df.loc[peak_row_index, "value"]
+
+        # ========== DYNAMISKA LABLES(ETIKETTER) ==========
+        # Skapa en nice text-str beroende på vad man väljer i menyn
+        # =================================================
+        if metric == "Units":
+            display_text = "Sålda Enheter (Miljoner Units sålda)"
+        else:
+            display_text = "Intäkter sett i $USD (Miljoner dollar)"
+
+        # Rita ut med den dynamiska texten ovan
+        with col1:
+            st.metric(label=f"Totalt {display_text}", value=f"{total_sum:,.1f}")
+        with col2:
+            st.metric(label="Dominant Media Format", value=top_format)
+        with col3:
+            st.metric(
+                label=f"Rekordår {display_text} ({peak_year})",
+                value=f"{peak_value:,.1f} ({df.loc[peak_row_index, 'format']})",
+            )
+
+        st.divider()  # En snygg linje som separerar våra KPIer från graferna
+
         # Visa grafen
         st.area_chart(chart_data)
 
