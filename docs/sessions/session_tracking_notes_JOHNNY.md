@@ -84,6 +84,13 @@
 - Expand on streamlit scripts, include more features with filters and sliders for group to use as template to build upon.
     - **Done**
 
+**Wednesday 15/04-2026**
+*Goals for today:*
+- Expand on streamlit scripts, include more features with filters and sliders for group to use as template to build upon.
+    - **Done**
+
+- Update streamlit dashboard with more filtering, dynamic variables, att KPI insights.
+    - **Done**
 
 
 # Remaining datasets that MIGHT be needed / used if needed.
