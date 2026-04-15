@@ -3,7 +3,7 @@
 # Kod: Engelska
 
 
-#
+# Dynamisk SQL query (String interpolation i python)
 def get_media_sales_query(metric: str, year_range: tuple, formats: list) -> str:
     """
     Generates a dynamic SQL query based on chosen filters
