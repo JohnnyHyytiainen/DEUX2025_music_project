@@ -50,3 +50,39 @@ Vår `data_loader.py` fil gör **en** sak och har **en** funktion, inget mer. De
 
 ### Appens framsida. 
 Vår `app.py` fungerar som FRAMSIDA. Här bör vi ej ha några tunga grafer, det är trots allt vår landing page och 'lobby'.
+
+--- 
+
+## Förklaring av dashboard/components/queries_physical_media.py script:
+Queryn är uppbyggd med en Dynamisk SQL query. I rena python termer kallas det **String interpolation** eftersom att jag använder mig av en `f-string`. 
+
+Enkel förklaring om hur just queryn i `queries_physical_media.py` fungerar:  
+Det kan ske en förvirring då en parameter(`year_range`) i funktionen är en `tuple`. En `tuple` kan aldrig ändras, den är immutable. Så om funktionen tar emot Tuplen `(1980, 2010)` så kan den aldrig ändras pga immutable.  
+
+MEN tricket i hur streamlit fungerar och när någon av oss drar i slidern i streamlit, från t.ex `1985-1999` så går inte streamlit och ändrar i `tuplen`. Istället kastar streamlit den gamla `tuplen`, kör om scriptet från rad 1 och skapar en **helt ny tuple:** `(1985, 1999)`.  
+
+Sen skickar Streamlit den nya `tupeln` in i funktionen. Så *OBJEKTET* i sig ändras aldrig, det är vilket *OBJEKT* som skickas **IN** som är det dynamiska!
+
+## Hur koden fungerar? (förklaring av queries_physical_media.py)
+
+**Liten överblick i hur en query blir/görs dynamisk**
+```python
+format_list = "', '".join(formats)
+```
+
+SQL och Python pratar inte exakt samma språk som vi vet. Om någon väljer "CD" och "LP" i Streamlit, skapar Python listan: `['CD', 'LP/EP']`.
+
+Men vår databas kräver ju syntaxen: `IN ('CD', 'LP/EP')` 
+
+Det är här där `.join()` funkar som brygga mellan språken. Den ska ta Pythons lista och sätter ihop orden med `', '` i mitten, så att databasen kan förstå det(Jag tänker direkt regex likt)
+
+```python
+WHERE metric = '{metric}'
+AND year BETWEEN {year_range[0]} AND {year_range[1]}
+```
+Innan texten ens skickas till databasen, har Python bytt ut alla variabler mot ren text. DuckDB ser alltså aldrig några "tuples" eller "lists", den ser bara en vanlig, hårdkodad SQL-fråga:
+`AND year BETWEEN 1980 AND 2010`
+
+
+
+F-strings vet vi hur det fungerar, vi använder: `f` framför stringen (`f""" SELECT... """`) och gör en dum text-string till en levande "mall" vi kan använda för att få ut resultat ELLER hela queries i det här fallet. Med förklaringen om hur en immutable `tuple` kan förändras så kommer ni förstå hela queryn och just varför den är dynamisk.
