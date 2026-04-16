@@ -8,13 +8,6 @@ import duckdb
 # KONSTANTER RÖR EJ
 # ==========================================
 DB_PATH = "../data/music_warehouse.duckdb"
-PARQUET_PATH_DAILY = (
-    "../data/processed/spotify_daily_top_songs_clean_version608.parquet"
-)
-PARQUET_PATH_CHARTS = "../data/processed/spotify_historical_charts.parquet"
-PARQUET_PATH_TOP = "../data/processed/spotify_top_200_historical.parquet"
-PARQUET_PATH_SALES = "../data/processed/historical_media_sales.parquet"
-PARQUET_PATH_DIM_TABLE = "../data/processed/dim_geography.parquet"
 
 
 def init_database():
@@ -31,31 +24,31 @@ def init_database():
     # ==========
     query_a = f"""
     CREATE OR REPLACE TABLE silver_spotify_daily AS 
-    SELECT * FROM '{PARQUET_PATH_DAILY}';
+    SELECT * FROM '{DB_PATH}';
     """
 
     query_b = f""" 
     CREATE OR REPLACE TABLE silver_historical_charts AS
-    SELECT * FROM '{PARQUET_PATH_CHARTS}';
+    SELECT * FROM '{DB_PATH}';
     """
 
     query_c = f"""
     CREATE OR REPLACE TABLE silver_top_200_historical AS
-    SELECT * FROM '{PARQUET_PATH_TOP}'
+    SELECT * FROM '{DB_PATH}'
     """
 
     query_d = f"""
     CREATE OR REPLACE TABLE silver_music_format_sales AS
-    SELECT * FROM '{PARQUET_PATH_SALES}'
+    SELECT * FROM '{DB_PATH}'
     """
 
     query_e = f"""
     CREATE OR REPLACE TABLE dim_geography AS
-    SELECT * FROM '{PARQUET_PATH_DIM_TABLE}'
+    SELECT * FROM '{DB_PATH}'
     """
 
     try:
-        print("Reading in .Parquet file and building table. This will go QUICK..")
+        print("Reading in database file and building table. This will go QUICK..")
         con.execute(query_a)
         con.execute(query_b)
         con.execute(query_c)
