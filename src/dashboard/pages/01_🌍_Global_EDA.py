@@ -74,13 +74,13 @@ if not df_mood.empty:
         with col1:
             st.subheader("Topp 10: Gladaste Nationerna")
             st.bar_chart(
-                top_happy.set_index("country")["happiness_score"], color="#3CFF00"
+                top_happy.set_index("country")["happiness_score"], color="#059AA8"
             )
 
         with col2:
             st.subheader("Topp 10: Melankoliska Nationerna")
             st.bar_chart(
-                top_sad.set_index("country")["happiness_score"], color="#00294B"
+                top_sad.set_index("country")["happiness_score"], color="#00004B"
             )
 
     # === FLIK: TEMPO ===
