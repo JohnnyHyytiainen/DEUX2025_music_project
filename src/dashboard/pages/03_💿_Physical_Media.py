@@ -46,6 +46,8 @@ if selected_formats:
     if not df.empty:
         # pivot datan för en finare graf
         chart_data = df.pivot(index="year", columns="format", values="value")
+        # Gör om åren till heltal istället för t.ex 2,008
+        chart_data.index = chart_data.index.astype(str)
 
         # ========================================
         # 4. KPI-KORT (Snabba insikter i toppen)

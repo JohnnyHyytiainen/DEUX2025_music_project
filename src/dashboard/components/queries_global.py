@@ -32,8 +32,7 @@ def get_top_explicit_query(region: str) -> str:
     {where_clause}
     GROUP BY country_name
     HAVING COUNT(*) > 100
-    ORDER BY Explicit_Procent DESC
-    LIMIT 10;
+    ORDER BY Explicit_Procent DESC;
     """
 
 
