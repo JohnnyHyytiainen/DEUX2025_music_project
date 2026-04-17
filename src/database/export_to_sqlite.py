@@ -15,7 +15,7 @@ def export_duckdb_to_sqlite():
     con.execute("LOAD sqlite;")
 
     # 3. Skapa och anslut till en NY SQLite-fil
-    sqlite_path = "./data/powerbi_warehouse.db"
+    sqlite_path = "./data/powerbi_warehouse_cleaned123.db"
     con.execute(f"ATTACH '{sqlite_path}' AS sqlite_db (TYPE SQLITE);")
 
     print(f"Databas skapad: {sqlite_path}")

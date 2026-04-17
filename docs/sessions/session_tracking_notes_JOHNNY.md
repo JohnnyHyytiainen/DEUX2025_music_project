@@ -74,7 +74,23 @@
 - Create a view table from `dim_geography` table to bypass having to JOIN when querying in streamlit dashboard.
     - **Done**
 
+**Tuesday 14/04-2026**
+*Goals for today*
+- Migrate entire OLAP(duckdb) database to OLTP(SQLite) format for ease of use in PowerBI for group.
+    - **Done**
 
+**Wednesday 15/04-2026**
+*Goals for today:*
+- Expand on streamlit scripts, include more features with filters and sliders for group to use as template to build upon.
+    - **Done**
+
+**Wednesday 15/04-2026**
+*Goals for today:*
+- Expand on streamlit scripts, include more features with filters and sliders for group to use as template to build upon.
+    - **Done**
+
+- Update streamlit dashboard with more filtering, dynamic variables, att KPI insights.
+    - **Done**
 
 
 # Remaining datasets that MIGHT be needed / used if needed.
