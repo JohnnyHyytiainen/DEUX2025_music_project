@@ -95,7 +95,9 @@
 **Saturday 18/04-2026**
 *Goals for today:*
 - Start working on Data storytelling on `silver_historical_charts`-table in database to visualise impact of corona pandemic.
-    - 
+    - **Done**
+
+
 
 
 
