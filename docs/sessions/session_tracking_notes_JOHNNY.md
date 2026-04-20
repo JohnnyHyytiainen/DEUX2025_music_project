@@ -97,7 +97,8 @@
 - Start working on Data storytelling on `silver_historical_charts`-table in database to visualise impact of corona pandemic.
     - **Done**
 
-
-
-
-
+**Monday 20/04-2026**
+*Goals for today:*
+- Start working on Data Storytelling plot number 2.
+    - **Done**
+    - Storytelling graph nr 2 is about the dip in explicit music during the holidays.
