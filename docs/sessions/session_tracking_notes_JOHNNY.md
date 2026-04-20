@@ -100,5 +100,5 @@
 **Monday 20/04-2026**
 *Goals for today:*
 - Start working on Data Storytelling plot number 2.
-    - ongoing
-    
+    - **Done**
+    - Storytelling graph nr 2 is about the dip in explicit music during the holidays.
