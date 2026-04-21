@@ -102,3 +102,8 @@
 - Start working on Data Storytelling plot number 2.
     - **Done**
     - Storytelling graph nr 2 is about the dip in explicit music during the holidays.
+
+**Tuesday 21/04-2026**
+*Goals for today:*
+- Start working on Data Storytelling plot number 3.
+    - *ongoing*
