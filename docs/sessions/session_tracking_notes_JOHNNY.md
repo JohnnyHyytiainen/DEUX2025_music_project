@@ -106,4 +106,9 @@
 **Tuesday 21/04-2026**
 *Goals for today:*
 - Start working on Data Storytelling plot number 3.
-    - *ongoing*
+    - **Done**
+
+**Wednesday 22/04-2026**
+*Goals for today:*
+- Refactor and finnish storytelling plot number 3.
+    - **Done**
