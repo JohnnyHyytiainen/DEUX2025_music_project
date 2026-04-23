@@ -10,6 +10,7 @@ from components.queries_global import (
     get_continent_list_query,
     get_mood_and_tempo_query,
     get_continent_bpm_stats_query,
+    get_dj_crate_query,
 )
 from components.charts_global import (
     create_explicit_bar_chart,
@@ -111,11 +112,34 @@ if not df_mood.empty:
                 use_container_width=True,
             )
 
-# ==================================
-# REGIONAL PULSE (Global Jämförelse)
-# ==================================
+# =============
+# MUSIC MATCHER
+# =============
 st.divider()
-if not df_bpm_stats.empty:
-    st.header("🥁 Regional Pulse: Global Jämförelse")
-    st.markdown("Här jämförs genomsnittet för kontinenter med varandra.")
-    st.plotly_chart(create_continent_bpm_chart(df_bpm_stats), use_container_width=True)
+st.header("🎧 DJ Music Matcher")
+st.markdown(
+    "Hitta de perfekta låtarna för din playlist baserat på tekniska parametrar."
+)
+
+# Kontrollpanel i kolumner
+ctrl_col1, ctrl_col2, ctrl_col3 = st.columns(3)
+
+with ctrl_col1:
+    bpm_range = st.slider("Välj BPM-spann:", 60, 200, (120, 130))
+    is_explicit = st.checkbox("Visa endast Explicit innehåll", value=False)
+
+with ctrl_col2:
+    valence_range = st.slider("Glädje (Valence %):", 0, 100, (40, 60))
+
+with ctrl_col3:
+    energy_range = st.slider("Energinivå (Energy %):", 0, 100, (60, 90))
+
+# Hämta matchningar
+query_dj = get_dj_crate_query(bpm_range, valence_range, energy_range, is_explicit)
+df_dj = fetch_data(query_dj)
+
+if not df_dj.empty:
+    st.success(f"Hittade {len(df_dj)} låtar som matchar dina kriterier!")
+    st.dataframe(df_dj, use_container_width=True, hide_index=True)
+else:
+    st.warning("Inga låtar matchade den kombinationen. Prova att vidga dina filter!")
