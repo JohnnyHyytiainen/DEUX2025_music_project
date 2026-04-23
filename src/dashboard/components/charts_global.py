@@ -69,3 +69,21 @@ def create_continent_bpm_chart(df):
     )
     fig.update_layout(coloraxis_showscale=False)
     return fig
+
+
+def create_tempo_bar_chart(df, is_fast=True):
+    """Creates a H-bar chart for fast/slow tempo music."""
+    # Röd/Orange för snabbt, Blå/Lila för långsamt
+    color = "#FF4B4B" if is_fast else "#4B4BFF"
+    order = "total ascending" if is_fast else "total descending"
+
+    fig = px.bar(
+        df,
+        x="avg_bpm",
+        y="country",
+        orientation="h",
+        color_discrete_sequence=[color],
+        labels={"country": "", "avg_bpm": "Snitt Tempo (BPM)"},
+    )
+    fig.update_layout(yaxis={"categoryorder": order})
+    return fig
