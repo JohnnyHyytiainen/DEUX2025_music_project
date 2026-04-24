@@ -130,12 +130,20 @@ with ctrl_col1:
 
 with ctrl_col2:
     valence_range = st.slider("Glädje (Valence %):", 0, 100, (40, 60))
+    limit_top = st.checkbox("Visa endast Top 20", value=False)
+
 
 with ctrl_col3:
     energy_range = st.slider("Energinivå (Energy %):", 0, 100, (60, 90))
 
 # Hämta matchningar
-query_dj = get_dj_crate_query(bpm_range, valence_range, energy_range, is_explicit)
+query_dj = get_dj_crate_query(
+    bpm_range,
+    valence_range,
+    energy_range,
+    is_explicit,
+    limit_top,
+)
 df_dj = fetch_data(query_dj)
 
 if not df_dj.empty:

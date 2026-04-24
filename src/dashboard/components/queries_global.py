@@ -84,9 +84,10 @@ def get_continent_bpm_stats_query() -> str:
 # sorterar på låtens högsta popularitet globalt så DJn får de största bangersen först
 # Eftersom BPM, Happiness och Energy är samma för en och samma låt
 # kan vi bara ta MAX() för att få ut värdet när vi grupperar.
-def get_dj_crate_query(bpm_range, valence_range, energy_range, is_explicit):
+def get_dj_crate_query(bpm_range, valence_range, energy_range, is_explicit, limit_top):
     """Queries UNIQUE songs based on 'dj filter(BPM, Mood, Energy)."""
     explicit_filter = "AND is_explicit = " + str(is_explicit).lower()
+    sql_limit = "LIMIT 20" if limit_top else "LIMIT 500"
 
     return f"""
     SELECT 
@@ -103,6 +104,6 @@ def get_dj_crate_query(bpm_range, valence_range, energy_range, is_explicit):
       {explicit_filter}
     GROUP BY name, artists
     
-    ORDER BY MAX(popularity) DESC 
-    LIMIT 20
+    ORDER BY MAX(popularity) DESC
+    {sql_limit}
     """
