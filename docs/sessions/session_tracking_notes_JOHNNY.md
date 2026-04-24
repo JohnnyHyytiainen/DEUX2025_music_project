@@ -112,3 +112,15 @@
 *Goals for today:*
 - Refactor and finnish storytelling plot number 3.
     - **Done**
+
+
+**Thursday 23/04-2026**
+*Goals for today:*
+- Refactor my streamlit dashboard page to be more modular and declutter the page to abide by teachers preferences
+    - **Done**
+
+**Friday 24/04-2026**
+*Goals for today:*
+- Add deps for vertical sliders for Streamlit
+    - **Done**
+
