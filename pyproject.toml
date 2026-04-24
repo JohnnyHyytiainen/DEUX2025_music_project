@@ -16,6 +16,7 @@ dependencies = [
     "requests>=2.33.1",
     "seaborn>=0.13.2",
     "streamlit>=1.56.0",
+    "streamlit-vertical-slider>=2.5.5",
 ]
 
 [dependency-groups]
