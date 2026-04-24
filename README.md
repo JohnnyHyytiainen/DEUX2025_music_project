@@ -26,19 +26,28 @@ Our repo follows Best Practice for Data Science projects:
 DEUX2025_music_project/
 ├── data/                           # IGNORED IN GIT (Shared via Drive/Teams)
 │   ├── plots/                      # Plots and graphs from initial EDA of our data
+│   ├── storytelling_plots/         # Storytelling graphs from projects EDA
 │   ├── raw/                        # Raw CSV data
 │   ├── processed/                  # Cleaned and compressed .parquet data
 │   └── music_warehouse.duckdb      # The local database
+│   
 ├── docs/                           # Documentation and diagrams
 │   └── database_schema.mmd         # ER diagram of the database
+│   
 ├── notebooks/                      # Jupyter Notebooks for initial EDA
+│   
 ├── src/                            # All source code
 │   ├── dashboard/                  # Streamlit frontend
 │   │   ├── app.py                  # The main file for the application
-│   │   └── pages/                  # Dashboard subpages
+│   │   ├── pages/                  # Dashboard subpages
+│   │   └── components/
+│   │       ├── queries_x.py        # Scripts for our query functions used in Streamlit dashboard
+│   │       └── charts_x.py         # Scripts for our visual charts functions used in Streamlit dashboard
+│   │
 │   ├── database/                   # Database script
 │   │   └── init_db.py              # Creates our tables and loads Parquet files
-│   └── data_processing/            # ETL pipelines to clean raw data
+│   └── data_processing/            # ETL pipelines to clean raw 
+│   
 ├── pyproject.toml                  # Dependencies and project configuration
 └── README.md                       # This file
 ```
