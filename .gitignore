@@ -45,7 +45,6 @@ __pycache__/
 # KOMMER ÄNDRAS MED TIDEN
 data/raw/
 
-
 # --- Local Databases ---
 *.sqlite
 *.sqlite3
@@ -63,3 +62,7 @@ data/raw/
 .idea/
 *.swp
 *.swo
+
+
+# --- Do not ignore ---
+!data/continents_pictures.csv
