@@ -64,6 +64,7 @@ def get_mood_and_tempo_query(continent: str) -> str:
     """
 
 
+# TODO : DELETE THIS SHIT
 def get_continent_bpm_stats_query() -> str:
     """Returns BPM statistics (BPM) aggregated per continent."""
     return """
@@ -96,7 +97,7 @@ def get_dj_crate_query(bpm_range, valence_range, energy_range, is_explicit, limi
         MAX(tempo) as BPM, 
         MAX(valence * 100) as Happiness, 
         MAX(energy * 100) as Energy,
-        COUNT(DISTINCT country) as "Antal Länder"
+        COUNT(DISTINCT country) as "Antal Länder" -- SE ÖVER X LÄNDER ELLER POPULÄR I 
     FROM gold_spotify_daily
     WHERE tempo BETWEEN {bpm_range[0]} AND {bpm_range[1]}
       AND valence * 100 BETWEEN {valence_range[0]} AND {valence_range[1]}
