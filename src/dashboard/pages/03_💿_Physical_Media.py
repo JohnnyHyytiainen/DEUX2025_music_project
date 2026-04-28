@@ -3,7 +3,7 @@
 # Kod: Engelska
 import streamlit as st
 from components.data_loader import fetch_data
-from components.queries_physical_media import get_media_sales_query
+from components.queries.queries_physical_media import get_media_sales_query
 
 # Sätter sidans titel, ikon och vilken typ av layout vi vill använda.
 st.set_page_config(page_title="Physical Media", page_icon="💿", layout="wide")

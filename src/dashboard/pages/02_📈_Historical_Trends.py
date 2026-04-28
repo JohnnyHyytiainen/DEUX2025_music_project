@@ -5,7 +5,7 @@ import streamlit as st
 import plotly.express as px
 
 from components.data_loader import fetch_data
-from components.queries_historical import (
+from components.queries.queries_historical import (
     get_available_years_query,
     get_top_artists_by_year_query,
 )

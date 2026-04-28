@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.title("🎵 Global Music Trends & Cultural Insights")
+st.title("Global Music Trends & Cultural Insights")
 st.markdown("### Välkommen till DEUX25 Musik Dashboard!")
 
 st.write("""

@@ -5,14 +5,14 @@ import streamlit as st
 
 # Hur vi löser våra imports per Kokchuns specs.
 from components.data_loader import fetch_data
-from components.queries_global import (
+from components.queries.queries_global import (
     get_top_explicit_query,
     get_continent_list_query,
     get_mood_and_tempo_query,
     get_continent_bpm_stats_query,
     get_dj_crate_query,
 )
-from components.charts_global import (
+from components.charts.charts_global import (
     create_explicit_bar_chart,
     create_mood_bar_chart,
     create_tempo_bar_chart,
@@ -125,16 +125,16 @@ st.markdown(
 ctrl_col1, ctrl_col2, ctrl_col3 = st.columns(3)
 
 with ctrl_col1:
-    bpm_range = st.slider("Välj BPM-spann:", 60, 200, (120, 130))
+    bpm_range = st.slider("Välj BPM-spann:", 60, 200, (60, 200))
     is_explicit = st.checkbox("Visa endast Explicit innehåll", value=False)
 
 with ctrl_col2:
-    valence_range = st.slider("Glädje (Valence %):", 0, 100, (40, 60))
-    limit_top = st.checkbox("Visa endast Top 20", value=False)
+    valence_range = st.slider("Glädje (Valence %):", 0, 100, (0, 100))
+    limit_top = st.checkbox("Visa endast Top 20", value=True)
 
 
 with ctrl_col3:
-    energy_range = st.slider("Energinivå (Energy %):", 0, 100, (60, 90))
+    energy_range = st.slider("Energinivå (Energy %):", 0, 100, (0, 100))
 
 # Hämta matchningar
 query_dj = get_dj_crate_query(
