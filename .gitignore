@@ -63,6 +63,8 @@ data/raw/
 *.swp
 *.swo
 
+# Jupyter Notebook
+.ipynb_checkpoints
 
 # --- Do not ignore ---
 !data/continents_pictures.csv
