@@ -16,13 +16,12 @@ from components.charts.charts_global import (
     create_explicit_bar_chart,
     create_mood_bar_chart,
     create_tempo_bar_chart,
-    create_continent_bpm_chart,
 )
 
 st.set_page_config(page_title="Globala Musiktrender", page_icon="🌍", layout="wide")
 
-st.title("🌍 Kulturella Skillnader i Musik")
-st.markdown("Utforska hur olika regioner konsumerar musik baserat på Spotify-data.")
+st.title("Kulturella Skillnader i Musik")
+st.markdown("Utforska hur olika regioner konsumerar musik baserat på Spotify's data.")
 st.divider()
 
 # =========================
@@ -33,9 +32,9 @@ st.write("Välj en kontinent nedan för att uppdatera alla topplistor på sidan.
 
 df_continents = fetch_data(get_continent_list_query())
 continent_list = (
-    ["Alla"] + df_continents["continent"].tolist()
+    ["Globalt"] + df_continents["continent"].tolist()
     if not df_continents.empty
-    else ["Alla"]
+    else ["Globalt"]
 )
 
 # Skapar två kolumner för filter för att hålla det snyggt

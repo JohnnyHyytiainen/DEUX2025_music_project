@@ -124,3 +124,11 @@
 - Add deps for vertical sliders for Streamlit
     - **Done**
 
+
+**Wednesday 26/04-2026**
+*Goals for today:*
+- Export all data and tables from `data/music_warehouse.duckdb` to `.parquet` files to make it possible to deploy streamlit dashboard.
+    - **Done**
+
+- Refactor `src/dashboard/components/data_loader.py` script to read our .parquet files instead of our database
+    - *ongoing*
