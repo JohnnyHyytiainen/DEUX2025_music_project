@@ -10,7 +10,7 @@ def get_top_explicit_query(continent: str) -> str:
     where_clause = "WHERE s.country != 'Global'"
 
     # Om användaren valt en specifik kontinent i Streamlit, lägg till filter
-    if continent and continent != "Alla":
+    if continent and continent != "Globalt":
         where_clause += f" AND g.continent = '{continent}'"
 
     # Läser ifrån 'gold_spotify_daily' och väljer 'country_name'
@@ -47,7 +47,7 @@ def get_mood_and_tempo_query(continent: str) -> str:
     where_clause = "WHERE country != 'Global'"
 
     # Om vi valt en specifik kontinent, filtrera på den
-    if continent and continent != "Alla":
+    if continent and continent != "Globalt":
         where_clause += f" AND g.continent = '{continent}'"
 
     return f"""
