@@ -4,13 +4,14 @@
 import streamlit as st
 # from components.data_loader import fetch_data
 # from components.queries.queries_physical_media import get_media_sales_query
-from components.charts.charts_physical import peak_table
+from components.charts.charts_physical import peak_table, format_over_time_line_chart
 
 
 
 st.title("💿 Music consumption: From Vinyl to Streaming")
 
-peak_table(40)
+peak_table(5)
+format_over_time_line_chart()
 
 
 
