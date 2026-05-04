@@ -8,11 +8,15 @@ from components.queries.queries_global import (
     get_continent_list_query,
     get_mood_and_tempo_query,
     get_dj_crate_query,
+    get_dancefloor_songs_query,
+    get_acoustic_loudness_query,
 )
 from components.charts.charts_global import (
     create_explicit_bar_chart,
     create_mood_bar_chart,
     create_tempo_bar_chart,
+    create_dancefloor_scatter,
+    create_acoustic_bar_chart,
 )
 
 st.set_page_config(page_title="Global Music Trends", page_icon="🌍", layout="wide")
@@ -27,11 +31,15 @@ if "explicit_continent" not in st.session_state:
 if "mood_continent" not in st.session_state:
     st.session_state.mood_continent = "Global"
 
+if "anatomy_continent" not in st.session_state:
+    st.session_state.anatomy_continent = "Global"
+
 
 # Callback-funktion för reset knapp högst upp
 def reset_all_filters():
     st.session_state.explicit_continent = "Global"
     st.session_state.mood_continent = "Global"
+    st.session_state.anatomy_continent = "Global"
 
 
 # ==========================================
@@ -124,6 +132,59 @@ if not df_mood.empty:
                 create_tempo_bar_chart(top_slow, is_fast=False),
                 use_container_width=True,
             )
+
+# ==========================================
+# Dancefloor, loudness queries + dess charts
+# ==========================================
+st.divider()
+st.subheader("Deep Dive into Musical Anatomy")
+
+selected_anatomy = st.selectbox(
+    "Select region for Musical Anatomy", options=continent_list, key="anatomy_continent"
+)
+
+df_dance = fetch_data(get_dancefloor_songs_query(selected_anatomy))
+df_acoustic = fetch_data(get_acoustic_loudness_query(selected_anatomy))
+
+if not df_dance.empty and not df_acoustic.empty:
+    tab_dance, tab_acoustic = st.tabs(["The Global Dancefloor", "Acoustic Vs Produced"])
+
+    with tab_dance:
+        st.markdown("**Does High energy equal danceable music?**")
+        st.write(
+            "The dots show the average per Country. The lines are the Global average."
+        )
+        st.plotly_chart(create_dancefloor_scatter(df_dance), use_container_width=True)
+
+    with tab_acoustic:
+        st.markdown("**The Aucustic sound VS The Electronic sound**")
+        st.write(
+            "Compare the nations that love stripped-down instruments with those that prefer heavily produced electronic beats."
+        )
+        col_ac1, col_ac2 = st.columns(2)
+
+        # Sortera ut extremerna i båda columns
+        top_acoustic = df_acoustic.sort_values(
+            by="avg_acousticness", ascending=False
+        ).head(10)
+        top_produced = df_acoustic.sort_values(
+            by="avg_acousticness", ascending=True
+        ).head(10)
+
+        with col_ac1:
+            st.subheader("The Acoustic Lounge")
+            st.plotly_chart(
+                create_acoustic_bar_chart(top_acoustic, is_acoustic=True),
+                use_container_width=True,
+            )
+
+        with col_ac2:
+            st.subheader("The Electronic Club")
+            st.plotly_chart(
+                create_acoustic_bar_chart(top_produced, is_acoustic=False),
+                use_container_width=True,
+            )
+
 
 # =============
 # MUSIC MATCHER

@@ -2,7 +2,7 @@
 # Kommentarer: Svenska
 # Kod: Engelska
 
-
+# Top explicita länderna i varje kontinent
 def get_top_explicit_query(continent: str) -> str:
     """Returns query to get countries with most explicit music taste."""
     # Bygga WHERE clause dynamiskt
@@ -26,6 +26,7 @@ def get_top_explicit_query(continent: str) -> str:
     """
 
 
+# Ren lista av kontinenter, filtrerar bort onödiga skräp
 def get_continent_list_query() -> str:
     """Gets a clean list of continents. Filters away useless garbage."""
     return """--sql
@@ -90,8 +91,8 @@ def get_dj_crate_query(bpm_range, valence_range, energy_range, is_explicit, limi
 
 
 # Query för att hitta världens "dancefloor" med dynamisk WHERE clause som ovan
-def get_dancefloor_query(continent: str) -> str:
-    """Gets Energy and Danceability to find the worlds Global dancefloor"""
+def get_dancefloor_songs_query(continent: str) -> str:
+    """Retrieves the top 400 songs in chosen region for a massive scatter plot"""
     where_clause = "WHERE s.country != 'Global'"
 
     if continent and continent != "Global":
@@ -99,15 +100,17 @@ def get_dancefloor_query(continent: str) -> str:
 
     return f"""--sql
     SELECT
-        g.country_name AS country,
-        AVG(s.energy) * 100 AS avg_energy,
-        AVG(S.danceability) * 100 AS avg_danceability,
-        COUNT(DISTINCT s.spotify_id) AS track_count
-    FROM silver_spotify_daily s
+        s.name AS Song,
+        s.artists AS Artist,
+        MAX(s.energy) * 100 AS Energy,
+        MAX(s.danceability) * 100 AS Danceability,
+        MAX(s.popularity) AS Popularity
+    FROM gold_spotify_daily s
     LEFT JOIN dim_geography g ON s.country = g.iso_code
     {where_clause}
-    GROUP BY g.country_name
-    HAVING track_count > 100
+    GROUP BY s.name, s.artists
+    ORDER BY Popularity DESC
+    LIMIT 450
     """
 
 
@@ -122,8 +125,8 @@ def get_acoustic_loudness_query(continent: str) -> str:
     SELECT
         g.country_name AS country,
         AVG(s.acousticness) * 100 AS avg_acousticness,
-        AVG(s.loudness) AS avg_loudness
-        COUNT(DISTINCT s.spotify_id) AS track_count
+        AVG(s.loudness) AS avg_loudness,
+        COUNT(DISTINCT s.spotify_id) as track_count
     FROM silver_spotify_daily s
     LEFT JOIN dim_geography g ON s.country = g.iso_code
     {where_clause}

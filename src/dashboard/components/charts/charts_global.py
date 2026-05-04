@@ -56,48 +56,47 @@ def create_tempo_bar_chart(df, is_fast=True):
     return fig
 
 
-# Scatterplot (Punkt diagram där Xaxis är danceability och Y-axis är Energy)
+# Scatterplot (Punkt diagram där X-axis är danceability och Y-axis är Energy)
 def create_dancefloor_scatter(df):
-    """Creates a scatter plot for Energy VS Danceability"""
+    """Creates a scatter plot for Energy VS Danceability on SONG level."""
     fig = px.scatter(
         df,
-        x="avg_danceability",
-        y="avg_energy",
-        hover_name="country",
-        color="avg_energy",
-        color_continuous_scale="Viridis",
+        x="Danceability",
+        y="Energy",
+        hover_name="Song",
+        hover_data=["Artist"],
+        color="Energy",
+        color_continuous_scale="Plasma",
         labels={
-            "avg_danceability": "Danceability Index (0-100)",
-            "avg_energy": "Energy Index (0-100)",
+            "Danceability": "Danceability Index (0-100)",
+            "Energy": "Energy Index (0-100)",
         },
         title="The Global Dancefloor: Energy vs. Danceability",
     )
     fig.update_layout(coloraxis_showscale=False)
-    # Lägger till linjer för referens, snittvärden
-    fig.add_vline(
-        x=df["avg_danceability"].mean(),
-        line_dash="dash",
-        line_color="gray",
-        opacity=0.5,
-    )
-    fig.add_hline(
-        y=df["avg_energy"].mean(), line_dash="dash", line_color="gray", opacity=0.45
-    )
+    # Lägg till ett kors i mitten som referens (index 50)
+    fig.add_vline(x=50, line_dash="dash", line_color="#8D8D8D", opacity=0.65)
+    fig.add_hline(y=50, line_dash="dash", line_color="#8D8D8D", opacity=0.5)
+
+    # Tvinga axlarna att visa hela spannet så man ser tomrummen
+    fig.update_xaxes(range=[0, 100])
+    fig.update_yaxes(range=[0, 100])
     return fig
 
 
 # Hbar chart, liggande stapeldiagram över aucustic countries.
-def create_acoustic_bar_chart(df):
+def create_acoustic_bar_chart(df, is_acoustic=True):
     """Creates a horizontal barchart over the most aucustic Nations"""
+    color = "#2E8B57" if is_acoustic else "#8A2BE2"
+    order = "total ascending" if is_acoustic else "total descending"
+
     fig = px.bar(
-        df.sort_values(by="avg_acousticness", ascending=True).tail(
-            15
-        ),  # som head men visar top 15
+        df,
         x="avg_acousticness",
         y="country",
         orientation="h",
-        color_discrete_sequence=["#1FC913"],
+        color_discrete_sequence=[color],
         labels={"country": "", "avg_acousticness": "Acousticness Index (0-100)"},
-        title="Top 15 Countries that loves their Aucustic music",
     )
+    fig.update_layout(yaxis={"categoryorder": order})
     return fig
