@@ -10,12 +10,12 @@ def get_top_explicit_query(continent: str) -> str:
     where_clause = "WHERE s.country != 'Global'"
 
     # Om användaren valt en specifik kontinent i Streamlit, lägg till filter
-    if continent and continent != "Globalt":
+    if continent and continent != "Global":
         where_clause += f" AND g.continent = '{continent}'"
 
     # Läser ifrån 'gold_spotify_daily' och väljer 'country_name'
     # Döper det till 'country' i output (AS country) så streamlit koden behöver ej ändras öht.
-    return f"""
+    return f"""--sql
     SELECT 
         g.country_name AS country, 
         AVG(CAST(s.is_explicit AS INT)) * 100 as Explicit_Procent,
@@ -31,7 +31,7 @@ def get_top_explicit_query(continent: str) -> str:
 
 def get_continent_list_query() -> str:
     """Gets a clean list of continents. Filters away useless garbage."""
-    return """
+    return """--sql
     SELECT DISTINCT continent 
     FROM dim_geography 
     WHERE continent IS NOT NULL 
@@ -47,10 +47,10 @@ def get_mood_and_tempo_query(continent: str) -> str:
     where_clause = "WHERE country != 'Global'"
 
     # Om vi valt en specifik kontinent, filtrera på den
-    if continent and continent != "Globalt":
+    if continent and continent != "Global":
         where_clause += f" AND g.continent = '{continent}'"
 
-    return f"""
+    return f"""--sql
     SELECT 
         g.country_name AS country,
         AVG(s.valence) * 100 as happiness_score,
@@ -67,7 +67,7 @@ def get_mood_and_tempo_query(continent: str) -> str:
 # TODO : DELETE THIS SHIT
 def get_continent_bpm_stats_query() -> str:
     """Returns BPM statistics (BPM) aggregated per continent."""
-    return """
+    return """--sql
     SELECT 
         g.continent, 
         AVG(s.tempo) as Avg_BPM,
@@ -90,14 +90,14 @@ def get_dj_crate_query(bpm_range, valence_range, energy_range, is_explicit, limi
     explicit_filter = "AND is_explicit = " + str(is_explicit).lower()
     sql_limit = "LIMIT 20" if limit_top else "LIMIT 500"
 
-    return f"""
+    return f"""--sql
     SELECT 
-        name as Låt, 
+        name as Song, 
         artists as Artist, 
         MAX(tempo) as BPM, 
         MAX(valence * 100) as Happiness, 
         MAX(energy * 100) as Energy,
-        COUNT(DISTINCT country) as "Antal Länder" -- SE ÖVER X LÄNDER ELLER POPULÄR I 
+        COUNT(DISTINCT country) as "Nr of Countries" -- SE ÖVER X LÄNDER ELLER POPULÄR I 
     FROM gold_spotify_daily
     WHERE tempo BETWEEN {bpm_range[0]} AND {bpm_range[1]}
       AND valence * 100 BETWEEN {valence_range[0]} AND {valence_range[1]}

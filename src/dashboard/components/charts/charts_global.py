@@ -31,7 +31,7 @@ def create_mood_bar_chart(df, is_happy=True):
         y="country",
         orientation="h",
         color_discrete_sequence=[color],
-        labels={"country": "", "happiness_score": "Glädje Index (0-100)"},
+        labels={"country": "", "happiness_score": "Happiness Index (0-100)"},
     )
     fig.update_layout(yaxis={"categoryorder": order})
     return fig

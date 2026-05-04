@@ -11,8 +11,8 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.title("Global Music Trends & Cultural Insights")
-st.markdown("### Välkommen till DEUX25 Musik Dashboard!")
+st.title("DEUX Project Rewind")
+st.markdown("### Welcome to DEUX25 Streamlit Dashboard.")
 
 st.write("""
 Denna dashboard är byggd ovanpå vår lokala **Data Lakehouse-arkitektur**. 

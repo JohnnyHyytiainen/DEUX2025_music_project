@@ -18,32 +18,32 @@ from components.charts.charts_global import (
     create_tempo_bar_chart,
 )
 
-st.set_page_config(page_title="Globala Musiktrender", page_icon="🌍", layout="wide")
+st.set_page_config(page_title="Global Music Trends", page_icon="🌍", layout="wide")
 
-st.title("Kulturella Skillnader i Musik")
-st.markdown("Utforska hur olika regioner konsumerar musik baserat på Spotify's data.")
+st.title("Cultural Differences in Music")
+st.markdown("Explore how different regions consume music based on Spotify's data.")
 st.divider()
 
 # =========================
 # 1) FILTER DIREKT PÅ SIDAN
 # =========================
-st.markdown("### Filtrera Insikter")
-st.write("Välj en kontinent nedan för att uppdatera alla topplistor på sidan.")
+st.markdown("### Filter Insights")
+st.write("Select a continent below to update all top lists on the page.")
 
 df_continents = fetch_data(get_continent_list_query())
 continent_list = (
-    ["Globalt"] + df_continents["continent"].tolist()
+    ["Global"] + df_continents["continent"].tolist()
     if not df_continents.empty
-    else ["Globalt"]
+    else ["Global"]
 )
 
 # Skapar två kolumner för filter för att hålla det snyggt
 filt_col1, filt_col2 = st.columns(2)
 with filt_col1:
-    selected_region = st.selectbox("Välj Kontinent:", options=continent_list)
+    selected_region = st.selectbox("Select continent:", options=continent_list)
 with filt_col2:
     # Plats för framtida filter (t.ex. datum eller genre) om vi vill använda det!
-    st.info("Tips: Genom att filtrera på kontinent kan du jämföra länder lokalt.")
+    st.info("Tip: By filtering by continent you can compare countries locally.")
 
 st.divider()
 
@@ -58,7 +58,7 @@ df_bpm_stats = fetch_data(get_continent_bpm_stats_query())
 # EXPLICIT MUSIK
 # ===============
 if not df_explicit.empty:
-    st.subheader(f"🗣️ Andel Explicit Musik ({selected_region})")
+    st.subheader(f"Explicit Music ({selected_region})")
 
     # Kalla på komponenten
     fig_explicit = create_explicit_bar_chart(df_explicit)
@@ -68,10 +68,10 @@ if not df_explicit.empty:
 # MOOD & TEMPO
 # =============
 st.divider()
-st.title(f"🎭 Kulturella Skillnader: Glädje & Tempo ({selected_region})")
+st.title(f"🎭 Cultural Differences: Happiness & Tempo ({selected_region})")
 
 if not df_mood.empty:
-    tab_happy, tab_tempo = st.tabs(["😊 Glädje (Valence)", "⚡ Tempo (BPM)"])
+    tab_happy, tab_tempo = st.tabs(["😊 Happiness (Valence)", "⚡ Tempo (BPM)"])
 
     # === FLIK: GLÄDJE ===
     with tab_happy:
@@ -80,14 +80,14 @@ if not df_mood.empty:
         top_sad = df_mood.sort_values(by="happiness_score", ascending=True).head(10)
 
         with col1:
-            st.subheader("De Gladaste Nationerna i regionen")
+            st.subheader("The Happiest Nations in the Region")
             st.plotly_chart(
                 create_mood_bar_chart(top_happy, is_happy=True),
                 use_container_width=True,
             )
 
         with col2:
-            st.subheader("De mest Melankoliska Nationerna i regionen")
+            st.subheader("The Most Melancholic Nations in the Region")
             st.plotly_chart(
                 create_mood_bar_chart(top_sad, is_happy=False), use_container_width=True
             )
@@ -99,13 +99,13 @@ if not df_mood.empty:
         top_slow = df_mood.sort_values(by="avg_bpm", ascending=True).head(10)
 
         with col3:
-            st.subheader("Snabbast Tempo i regionen")
+            st.subheader("Fastest Tempo in the region")
             st.plotly_chart(
                 create_tempo_bar_chart(top_fast, is_fast=True), use_container_width=True
             )
 
         with col4:
-            st.subheader("Långsammast Tempo i regionen")
+            st.subheader("Slowest Tempo in the region")
             st.plotly_chart(
                 create_tempo_bar_chart(top_slow, is_fast=False),
                 use_container_width=True,
@@ -116,24 +116,22 @@ if not df_mood.empty:
 # =============
 st.divider()
 st.header("🎧 DJ Music Matcher")
-st.markdown(
-    "Hitta de perfekta låtarna för din playlist baserat på tekniska parametrar."
-)
+st.markdown("Find the perfect songs for your playlist based on technical parameters.")
 
 # Kontrollpanel i kolumner
 ctrl_col1, ctrl_col2, ctrl_col3 = st.columns(3)
 
 with ctrl_col1:
-    bpm_range = st.slider("Välj BPM-spann:", 60, 200, (60, 200))
-    is_explicit = st.checkbox("Visa endast Explicit innehåll", value=False)
+    bpm_range = st.slider("Select BPM range:", 60, 200, (60, 200))
+    is_explicit = st.checkbox("Show only Explicit songs", value=False)
 
 with ctrl_col2:
-    valence_range = st.slider("Glädje (Valence %):", 0, 100, (0, 100))
-    limit_top = st.checkbox("Visa endast Top 20", value=True)
+    valence_range = st.slider("Happiness (Valence %):", 0, 100, (0, 100))
+    limit_top = st.checkbox("Show only Top 20", value=True)
 
 
 with ctrl_col3:
-    energy_range = st.slider("Energinivå (Energy %):", 0, 100, (0, 100))
+    energy_range = st.slider("Energy level (Energy %):", 0, 100, (0, 100))
 
 # Hämta matchningar
 query_dj = get_dj_crate_query(
@@ -146,7 +144,7 @@ query_dj = get_dj_crate_query(
 df_dj = fetch_data(query_dj)
 
 if not df_dj.empty:
-    st.success(f"Hittade {len(df_dj)} låtar som matchar dina kriterier!")
+    st.success(f"Found {len(df_dj)} songs that match your criteria!")
     st.dataframe(df_dj, use_container_width=True, hide_index=True)
 else:
-    st.warning("Inga låtar matchade den kombinationen. Prova att vidga dina filter!")
+    st.warning("No songs matched that combination. Try expanding your search!")
