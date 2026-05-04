@@ -22,3 +22,6 @@ def get_media_sales_query(metric: str, year_range: tuple, formats: list) -> str:
     AND format IN ('{format_list}')
     ORDER BY year ASC
     """
+
+def get_all_media_sales() -> str:
+    return "SELECT * FROM silver_music_format_sales"
