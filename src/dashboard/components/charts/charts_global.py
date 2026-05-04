@@ -37,40 +37,7 @@ def create_mood_bar_chart(df, is_happy=True):
     return fig
 
 
-# Tempo linjediagram för BPM
-def create_tempo_line_chart(df):
-    """Creates a line chart for BPM(Beats Per Minute)"""
-    fig = px.line(
-        df,
-        x="country",
-        y="avg_bpm",
-        markers=True,
-        color_discrete_sequence=["#F5640A"],
-        labels={"country": "Land", "avg_bpm": "Snitt Tempo (BPM)"},
-    )
-    fig.update_yaxes(range=[df["avg_bpm"].min() - 2, df["avg_bpm"].max() + 2])
-    return fig
-
-
-# Skapar stapeldiagram för kontinenter
-def create_continent_bpm_chart(df):
-    """Creates bar charts with some error margins for continents."""
-    fig = px.bar(
-        df,
-        x="continent",
-        y="Avg_BPM",
-        range_y=[100, 140],
-        color="Avg_BPM",
-        color_continuous_scale="Reds",
-        error_y=df["Max_BPM"] - df["Avg_BPM"],
-        error_y_minus=df["Avg_BPM"] - df["Min_BPM"],
-        labels={"continent": "Kontinent", "Avg_BPM": "Genomsnittligt BPM"},
-        title="Genomsnittligt Tempo med Spridning (Min/Max)",
-    )
-    fig.update_layout(coloraxis_showscale=False)
-    return fig
-
-
+# Tempo barchart
 def create_tempo_bar_chart(df, is_fast=True):
     """Creates a H-bar chart for fast/slow tempo music."""
     # Röd/Orange för snabbt, Blå/Lila för långsamt
@@ -86,4 +53,51 @@ def create_tempo_bar_chart(df, is_fast=True):
         labels={"country": "", "avg_bpm": "Snitt Tempo (BPM)"},
     )
     fig.update_layout(yaxis={"categoryorder": order})
+    return fig
+
+
+# Scatterplot (Punkt diagram där Xaxis är danceability och Y-axis är Energy)
+def create_dancefloor_scatter(df):
+    """Creates a scatter plot for Energy VS Danceability"""
+    fig = px.scatter(
+        df,
+        x="avg_danceability",
+        y="avg_energy",
+        hover_name="country",
+        color="avg_energy",
+        color_continuous_scale="Viridis",
+        labels={
+            "avg_danceability": "Danceability Index (0-100)",
+            "avg_energy": "Energy Index (0-100)",
+        },
+        title="The Global Dancefloor: Energy vs. Danceability",
+    )
+    fig.update_layout(coloraxis_showscale=False)
+    # Lägger till linjer för referens, snittvärden
+    fig.add_vline(
+        x=df["avg_danceability"].mean(),
+        line_dash="dash",
+        line_color="gray",
+        opacity=0.5,
+    )
+    fig.add_hline(
+        y=df["avg_energy"].mean(), line_dash="dash", line_color="gray", opacity=0.45
+    )
+    return fig
+
+
+# Hbar chart, liggande stapeldiagram över aucustic countries.
+def create_acoustic_bar_chart(df):
+    """Creates a horizontal barchart over the most aucustic Nations"""
+    fig = px.bar(
+        df.sort_values(by="avg_acousticness", ascending=True).tail(
+            15
+        ),  # som head men visar top 15
+        x="avg_acousticness",
+        y="country",
+        orientation="h",
+        color_discrete_sequence=["#1FC913"],
+        labels={"country": "", "avg_acousticness": "Acousticness Index (0-100)"},
+        title="Top 15 Countries that loves their Aucustic music",
+    )
     return fig
