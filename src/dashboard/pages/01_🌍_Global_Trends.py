@@ -3,13 +3,12 @@
 # Kod: Engelska
 import streamlit as st
 
-# Hur vi löser våra imports per Kokchuns specs.
+# Imports
 from components.data_loader import fetch_data
 from components.queries.queries_global import (
     get_top_explicit_query,
     get_continent_list_query,
     get_mood_and_tempo_query,
-    get_continent_bpm_stats_query,
     get_dj_crate_query,
 )
 from components.charts.charts_global import (
@@ -20,16 +19,30 @@ from components.charts.charts_global import (
 
 st.set_page_config(page_title="Global Music Trends", page_icon="🌍", layout="wide")
 
+# ==========================================
+# 0) SESSION STATE & CALLBACKS
+# ==========================================
+# Initiera state variabler för varje separat graf
+if "explicit_continent" not in st.session_state:
+    st.session_state.explicit_continent = "Global"
+
+if "mood_continent" not in st.session_state:
+    st.session_state.mood_continent = "Global"
+
+
+# Callback-funktion för reset-knappen
+def reset_all_filters():
+    st.session_state.explicit_continent = "Global"
+    st.session_state.mood_continent = "Global"
+
+
+# ==========================================
+# HEADER & GLOBAL CONTROLS
+# ==========================================
 st.title("Cultural Differences in Music")
 st.markdown("Explore how different regions consume music based on Spotify's data.")
-st.divider()
 
-# =========================
-# 1) FILTER DIREKT PÅ SIDAN
-# =========================
-st.markdown("### Filter Insights")
-st.write("Select a continent below to update all top lists on the page.")
-
+# Hämta kontinentlistan en gång (används av alla selectboxes)
 df_continents = fetch_data(get_continent_list_query())
 continent_list = (
     ["Global"] + df_continents["continent"].tolist()
@@ -37,38 +50,41 @@ continent_list = (
     else ["Global"]
 )
 
-# Skapar två kolumner för filter för att hålla det snyggt
-filt_col1, filt_col2 = st.columns(2)
-with filt_col1:
-    selected_region = st.selectbox("Select continent:", options=continent_list)
-with filt_col2:
-    # Plats för framtida filter (t.ex. datum eller genre) om vi vill använda det!
-    st.info("Tip: By filtering by continent you can compare countries locally.")
-
+# Reset knapp i toppen
+st.button("Reset ALL Region Filters", on_click=reset_all_filters, type="primary")
 st.divider()
 
 # ==========================================
-# 2) HÄMTA DATA (Nu reagerar mood & tempo på filtret!)
+# EXPLICIT MUSIK (Eget filter)
 # ==========================================
-df_explicit = fetch_data(get_top_explicit_query(selected_region))
-df_mood = fetch_data(get_mood_and_tempo_query(selected_region))
-df_bpm_stats = fetch_data(get_continent_bpm_stats_query())
+st.subheader("Explicit Music")
 
-# ==============
-# EXPLICIT MUSIK
-# ===============
+# selectbox är en kopplad key direkt till session_state
+selected_explicit = st.selectbox(
+    "Select region for Explicit Music:",
+    options=continent_list,
+    key="explicit_continent",
+)
+
+df_explicit = fetch_data(get_top_explicit_query(selected_explicit))
+
 if not df_explicit.empty:
-    st.subheader(f"Explicit Music ({selected_region})")
-
-    # Kalla på komponenten
     fig_explicit = create_explicit_bar_chart(df_explicit)
     st.plotly_chart(fig_explicit, use_container_width=True)
 
-# =============
-# MOOD & TEMPO
-# =============
 st.divider()
-st.title(f"🎭 Cultural Differences: Happiness & Tempo ({selected_region})")
+
+# ==========================================
+# MOOD & TEMPO (Eget filter)
+# ==========================================
+st.subheader("Cultural Differences: Happiness & Tempo")
+
+# Den här selectboxen är kopplad till sin egen session_state
+selected_mood = st.selectbox(
+    "Select region for Mood & Tempo:", options=continent_list, key="mood_continent"
+)
+
+df_mood = fetch_data(get_mood_and_tempo_query(selected_mood))
 
 if not df_mood.empty:
     tab_happy, tab_tempo = st.tabs(["😊 Happiness (Valence)", "⚡ Tempo (BPM)"])
@@ -80,32 +96,32 @@ if not df_mood.empty:
         top_sad = df_mood.sort_values(by="happiness_score", ascending=True).head(10)
 
         with col1:
-            st.subheader("The Happiest Nations in the Region")
+            st.markdown(f"**The Happiest Nations ({selected_mood})**")
             st.plotly_chart(
                 create_mood_bar_chart(top_happy, is_happy=True),
                 use_container_width=True,
             )
 
         with col2:
-            st.subheader("The Most Melancholic Nations in the Region")
+            st.markdown(f"**The Most Melancholic Nations ({selected_mood})**")
             st.plotly_chart(
                 create_mood_bar_chart(top_sad, is_happy=False), use_container_width=True
             )
 
-    # === TEMPO med barcharts ===
+    # === FLIK: TEMPO ===
     with tab_tempo:
         col3, col4 = st.columns(2)
         top_fast = df_mood.sort_values(by="avg_bpm", ascending=False).head(10)
         top_slow = df_mood.sort_values(by="avg_bpm", ascending=True).head(10)
 
         with col3:
-            st.subheader("Fastest Tempo in the region")
+            st.markdown(f"**Fastest Tempo ({selected_mood})**")
             st.plotly_chart(
                 create_tempo_bar_chart(top_fast, is_fast=True), use_container_width=True
             )
 
         with col4:
-            st.subheader("Slowest Tempo in the region")
+            st.markdown(f"**Slowest Tempo ({selected_mood})**")
             st.plotly_chart(
                 create_tempo_bar_chart(top_slow, is_fast=False),
                 use_container_width=True,
@@ -115,7 +131,7 @@ if not df_mood.empty:
 # MUSIC MATCHER
 # =============
 st.divider()
-st.header("🎧 DJ Music Matcher")
+st.header("DJ Music Matcher")
 st.markdown("Find the perfect songs for your playlist based on technical parameters.")
 
 # Kontrollpanel i kolumner
