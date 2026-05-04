@@ -2,8 +2,6 @@
 # Kommentarer: Svenska
 # Kod: Engelska
 import streamlit as st
-
-# Imports
 from components.data_loader import fetch_data
 from components.queries.queries_global import (
     get_top_explicit_query,
@@ -20,7 +18,7 @@ from components.charts.charts_global import (
 st.set_page_config(page_title="Global Music Trends", page_icon="🌍", layout="wide")
 
 # ==========================================
-# 0) SESSION STATE & CALLBACKS
+# Variabler
 # ==========================================
 # Initiera state variabler för varje separat graf
 if "explicit_continent" not in st.session_state:
@@ -30,7 +28,7 @@ if "mood_continent" not in st.session_state:
     st.session_state.mood_continent = "Global"
 
 
-# Callback-funktion för reset-knappen
+# Callback-funktion för reset knapp högst upp
 def reset_all_filters():
     st.session_state.explicit_continent = "Global"
     st.session_state.mood_continent = "Global"
@@ -87,7 +85,7 @@ selected_mood = st.selectbox(
 df_mood = fetch_data(get_mood_and_tempo_query(selected_mood))
 
 if not df_mood.empty:
-    tab_happy, tab_tempo = st.tabs(["😊 Happiness (Valence)", "⚡ Tempo (BPM)"])
+    tab_happy, tab_tempo = st.tabs(["Happiness (Valence)", "Tempo (BPM)"])
 
     # === FLIK: GLÄDJE ===
     with tab_happy:
