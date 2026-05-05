@@ -27,7 +27,7 @@ st.set_page_config(page_title="Global Music Trends", page_icon="🌍", layout="w
 # ==========================================
 def initialize_state():
     """Initiates all needed session_states dynamically."""
-    state_keys = ["ecplicit_continent", "mood_continent", "anatomy_continent"]
+    state_keys = ["explicit_continent", "mood_continent", "anatomy_continent"]
     for keys in state_keys:
         if keys not in st.session_state:
             st.session_state[keys] = "Global"
