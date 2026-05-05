@@ -114,7 +114,47 @@ def get_acoustic_loudness_query(continent: str) -> str:
     """
 
 
+# ========================================================================
+# Query för radar-chart för att jämföra valda regioner i gold_spotify_daily
+# ========================================================================
+def get_audio_signature_query(continent: str) -> str:
+    """Gets average audio DNA for selected region AND the Global baseline for comparison."""
+    if continent == "Global":
+        top_where = "WHERE s.country = 'Global'"
+        region_name = "Global Selection"
+    else:
+        top_where = _build_geo_where_clause(continent)
+        region_name = continent
+
+    return f"""--sql
+    SELECT 
+        '{region_name}' AS Region,
+        AVG(s.danceability) * 100 AS Danceability,
+        AVG(s.energy) * 100 AS Energy,
+        AVG(s.valence) * 100 AS Happiness,
+        AVG(s.acousticness) * 100 AS Acousticness,
+        AVG(s.speechiness) * 100 AS Speechiness
+    FROM gold_spotify_daily s
+    LEFT JOIN dim_geography g ON s.country = g.iso_code
+    {top_where}
+    
+    UNION ALL
+    
+    -- Query som alltid hämtar den fasta, globala baslinen
+    SELECT 
+        'Global Baseline' AS Region,
+        AVG(danceability) * 100 AS Danceability,
+        AVG(energy) * 100 AS Energy,
+        AVG(valence) * 100 AS Happiness,
+        AVG(acousticness) * 100 AS Acousticness,
+        AVG(speechiness) * 100 AS Speechiness
+    FROM gold_spotify_daily
+    WHERE country = 'Global'
+    """
+
+
 # ================================================================
+# ANVÄNDS EJ I GLOBAL
 # Songfinder i PowerBI dashboarden fast i streamlit.
 # Syfte: Hitta BÄST matchande låt/låtar beroende på sökparametrar
 # ================================================================

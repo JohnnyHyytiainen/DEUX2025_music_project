@@ -9,6 +9,7 @@ from components.queries.queries_global import (
     get_mood_and_tempo_query,
     get_dancefloor_songs_query,
     get_acoustic_loudness_query,
+    get_audio_signature_query,
 )
 from components.charts.charts_global import (
     create_explicit_bar_chart,
@@ -16,6 +17,7 @@ from components.charts.charts_global import (
     create_tempo_bar_chart,
     create_dancefloor_scatter,
     create_acoustic_bar_chart,
+    create_audio_signature_radar,
 )
 
 st.set_page_config(page_title="Global Music Trends", page_icon="🌍", layout="wide")
@@ -26,7 +28,12 @@ st.set_page_config(page_title="Global Music Trends", page_icon="🌍", layout="w
 # ==========================================
 def initialize_state():
     """Initiates all needed session_states dynamically."""
-    state_keys = ["explicit_continent", "mood_continent", "anatomy_continent"]
+    state_keys = [
+        "explicit_continent",
+        "mood_continent",
+        "anatomy_continent",
+        "signature_continent",
+    ]
     for keys in state_keys:
         if keys not in st.session_state:
             st.session_state[keys] = "Global"
@@ -149,6 +156,39 @@ def render_anatomy_section(continent_list):
             )
 
 
+# Jämföra länders musiksmak vs global basline
+def render_audio_signature_section(continent_list):
+    st.header("The Cultural Audio Signature")
+    st.markdown(
+        "Discover the musical DNA of different regions. How does the local taste compare to the global baseline?"
+    )
+
+    selected_signature = st.selectbox(
+        "Select region to view Audio DNA:",
+        options=continent_list,
+        key="signature_continent",
+    )
+
+    df_signature = fetch_data(get_audio_signature_query(selected_signature))
+
+    if not df_signature.empty:
+        col_text, col_chart = st.columns([1, 2])
+
+        with col_text:
+            st.write(f"**Analyzing:** {selected_signature}")
+            st.write(
+                "This radar chart maps the average traits of top tracks in this region."
+            )
+            st.write(
+                "Notice how the green shape stretches outward in areas where this region over-indexes compared to the grey global baseline."
+            )
+
+        with col_chart:
+            st.plotly_chart(
+                create_audio_signature_radar(df_signature), use_container_width=True
+            )
+
+
 # ===============================================
 # 3) MAIN controller funktionen för varje sektion
 # ===============================================
@@ -177,6 +217,9 @@ def main():
     st.divider()
 
     render_anatomy_section(continent_list)
+    st.divider()
+
+    render_audio_signature_section(continent_list)
     st.divider()
 
 
