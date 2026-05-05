@@ -27,24 +27,42 @@ def peak_table(number_format = 10):
 def format_over_time_line_chart(metric, formats, years):
     dff = df.query("metric == @metric and format in @formats and year >= @years[0] and year <= @years[1]")
     dff = dff.groupby(['year', 'format'])['value'].sum().reset_index()
+
+    fun_facts = {
+        1999: 'CD reached its all-time peak with 940 million units sold!',
+        2001: 'Napster shutdown accelerated digital music shift',
+        2008: 'Streaming starts taking over physical media',
+    }
+
+    dff['fun_fact'] = dff['year'].map(fun_facts).fillna('')
     dff['year'] = dff['year'].astype(str)
 
     with st.container(border=True):
         st.markdown("Format over years")
-        fig = px.line(dff, x='year', y='value', color='format')
 
-        # Annotations for peak years
-        for format_name in dff['format'].unique():
-            df_fmt = dff[dff['format'] == format_name]
-            peak_row = df_fmt.loc[df_fmt['value'].idxmax()]
+        fig = px.line(dff, x='year', y='value', color='format', custom_data=['fun_fact'])
 
+        fig.update_traces(
+            hovertemplate="<b>%{x}</b><br>Value: %{y}<br>%{customdata[0]}<extra></extra>"
+        )
+
+        for year in fun_facts.keys():
+            fig.add_shape(
+                type="line",
+                x0=str(year),
+                x1=str(year),
+                y0=0,
+                y1=1,
+                yref="paper",
+                line=dict(dash="dot", color="grey", width=1),
+                opacity=0.5,
+            )
             fig.add_annotation(
-                x=peak_row['year'],
-                y=peak_row['value'],
-                text=f"📌 {format_name} peak",
-                showarrow=True,
-                arrowhead=2,
-                font=dict(size=10)
+                x=str(year),
+                y=1,
+                yref="paper",
+                text="ℹ️",
+                showarrow=False,
             )
 
         fig.update_xaxes(tickangle=45)
