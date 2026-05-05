@@ -62,7 +62,7 @@ def _render_comparison_columns(
 
 
 # ====================================================================
-# 2) UI SECTIONS - Selections för att kunna välja regioner för queries
+# 2) UI SECTIONS - ENCAPSULATION
 # ====================================================================
 # Explicit query + bar-chart
 def render_explicit_section(continent_list):
