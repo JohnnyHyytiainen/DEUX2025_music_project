@@ -1,4 +1,5 @@
 import streamlit as st
+import plotly.express as px
 
 import duckdb
 
@@ -23,16 +24,13 @@ def peak_table(number_format = 10):
         st.markdown("Top peak year by format")
         st.table(df_peak_year.head(number_format))
 
-def format_over_time_line_chart():
-    df_format_sales = df.groupby(['year', 'format'])['value'].sum().reset_index()
-
-    df_format_sales['year'] = df_format_sales['year'].astype(str)
+def format_over_time_line_chart(metric, formats, years):
+    dff = df.query("metric == @metric and format in @formats and year >= @years[0] and year <= @years[1]")
+    dff = dff.groupby(['year', 'format'])['value'].sum().reset_index()
+    dff['year'] = dff['year'].astype(str)
 
     with st.container(border=True):
         st.markdown("Format over years")
-        st.line_chart(
-            df_format_sales,
-            x='year',
-            y='value',
-            color='format'
-        )
+        fig = px.line(dff, x='year', y='value', color='format')
+        fig.update_xaxes(tickangle=45)
+        st.plotly_chart(fig, use_container_width=True)
