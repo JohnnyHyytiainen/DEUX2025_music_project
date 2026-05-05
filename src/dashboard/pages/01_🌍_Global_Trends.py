@@ -7,7 +7,6 @@ from components.queries.queries_global import (
     get_top_explicit_query,
     get_continent_list_query,
     get_mood_and_tempo_query,
-    get_dj_crate_query,
     get_dancefloor_songs_query,
     get_acoustic_loudness_query,
 )
@@ -150,68 +149,6 @@ def render_anatomy_section(continent_list):
             )
 
 
-# Songfinder ifrån PowerBI dashboarden.
-def render_dj_matcher_section():
-    st.header("DJ Music Matcher")
-    st.markdown(
-        "Find the perfect songs for your playlist based on technical parameters."
-    )
-
-    ctrl_col1, ctrl_col2, ctrl_col3 = st.columns(3)
-    with ctrl_col1:
-        bpm_range = st.slider("Select BPM range:", 60, 200, (60, 200))
-        is_explicit = st.checkbox("Show only Explicit songs", value=False)
-    with ctrl_col2:
-        valence_range = st.slider("Happiness (Valence %):", 0, 100, (0, 100))
-        limit_top = st.checkbox("Show only Top 20", value=True)
-    with ctrl_col3:
-        energy_range = st.slider("Energy level (Energy %):", 0, 100, (0, 100))
-
-    query_dj = get_dj_crate_query(
-        bpm_range, valence_range, energy_range, is_explicit, limit_top
-    )
-    df_dj = fetch_data(query_dj)
-
-    if not df_dj.empty:
-        st.success(f"Found {len(df_dj)} songs that match your criteria!")
-        st.dataframe(df_dj, use_container_width=True, hide_index=True)
-    else:
-        st.warning("No songs matched that combination. Try expanding your search!")
-
-
-# ====================================================
-# 3) MAIN CONTROLLER funktion (Dirigenten för allting)
-# ====================================================
-def main():
-    initialize_state()
-
-    # Header
-    st.title("Cultural Differences in Music")
-    st.markdown("Explore how different regions consume music based on Spotify's data.")
-    st.button("Reset ALL Region Filters", on_click=reset_all_filters, type="primary")
-    st.divider()
-
-    # Global Data Fetcher
-    df_continents = fetch_data(get_continent_list_query())
-    continent_list = (
-        ["Global"] + df_continents["continent"].tolist()
-        if not df_continents.empty
-        else ["Global"]
-    )
-
-    # Render Sections och sätt dividers mellan varje section
-    render_explicit_section(continent_list)
-    st.divider()
-
-    render_mood_and_tempo_section(continent_list)
-    st.divider()
-
-    render_anatomy_section(continent_list)
-    st.divider()
-
-    render_dj_matcher_section()
-
-
 # ===============================================
 # 3) MAIN controller funktionen för varje sektion
 # ===============================================
@@ -241,8 +178,6 @@ def main():
 
     render_anatomy_section(continent_list)
     st.divider()
-
-    render_dj_matcher_section()
 
 
 if __name__ == "__main__":
