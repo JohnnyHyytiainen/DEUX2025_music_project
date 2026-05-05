@@ -32,5 +32,20 @@ def format_over_time_line_chart(metric, formats, years):
     with st.container(border=True):
         st.markdown("Format over years")
         fig = px.line(dff, x='year', y='value', color='format')
+
+        # Annotations for peak years
+        for format_name in dff['format'].unique():
+            df_fmt = dff[dff['format'] == format_name]
+            peak_row = df_fmt.loc[df_fmt['value'].idxmax()]
+
+            fig.add_annotation(
+                x=peak_row['year'],
+                y=peak_row['value'],
+                text=f"📌 {format_name} peak",
+                showarrow=True,
+                arrowhead=2,
+                font=dict(size=10)
+            )
+
         fig.update_xaxes(tickangle=45)
         st.plotly_chart(fig, use_container_width=True)
