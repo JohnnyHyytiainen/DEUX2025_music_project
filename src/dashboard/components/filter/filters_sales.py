@@ -16,5 +16,5 @@ def year_filter():
         label='Select years',
         min_value=int(df['year'].min()),
         max_value=int(df['year'].max()),
-        value=(int(df['year'].min()), int(df['year'].max()))
+        value=(int(df['year'].min()), int(df['year'].max())),
     )

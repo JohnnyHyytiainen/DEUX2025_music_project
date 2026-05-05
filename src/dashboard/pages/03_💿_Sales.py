@@ -8,7 +8,7 @@ st.set_page_config(page_title="Sales format over time",page_icon="💿", layout=
 
 st.title("💿 Music consumption: From Vinyl to Streaming")
 
-cols = st.columns(3)
+cols = st.columns(2)
 with cols[0]:
     metric = metrics_filter()
 with cols[1]:
@@ -23,5 +23,8 @@ for col, m, label in zip(cols, metrics, labels):
     with col:
         total_sales_kpi(m, formats, years, label)
 
+st.title("Linechart of total sales per year")
 format_over_time_line_chart(metric, formats, years)
+
+st.title("Barchart for revenue and units sold over time")
 total_units_revenue_bar_chart(formats, years, metrics, labels)

@@ -83,7 +83,7 @@ def total_sales_kpi(metric, formats, years, label):
         AND format IN ('{format_list}')
         """).df().iloc[0]
 
-    st.metric(label=label, value=f"{total_sales['total_sales']:,.0f} Million")
+    st.metric(label=label, value=f"{total_sales['total_sales']:,.0f} Million",border=True)
 
 def total_units_revenue_bar_chart(formats, years, metrics, labels):
     dfs = []
