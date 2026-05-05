@@ -2,6 +2,7 @@ import streamlit as st
 import plotly.express as px
 
 import duckdb
+import pandas as pd
 
 from components.data_loader import fetch_data
 from components.queries.queries_sales import get_all_media_sales
@@ -9,6 +10,8 @@ from components.queries.queries_sales import get_all_media_sales
 
 df = fetch_data(get_all_media_sales())
 
+
+#TODO: Change to lifetime span of different formats
 df_peak_year = duckdb.sql("""--sql
     SELECT DISTINCT ON (format, metric)
         format,
@@ -80,5 +83,31 @@ def total_sales_kpi(metric, formats, years, label):
         AND format IN ('{format_list}')
         """).df().iloc[0]
 
-    st.metric(label=f"Total sales in {label}", value=f"{total_sales['total_sales']:,.0f} Million")
+    st.metric(label=label, value=f"{total_sales['total_sales']:,.0f} Million")
+
+def total_units_revenue_bar_chart(formats, years, metrics, labels):
+    dfs = []
+    for m, label in zip(metrics, labels):
+        dff = df.query("metric == @m and format in @formats and year >= @years[0] and year <= @years[1]")
+        dff = dff.groupby(['format'])['value'].sum().reset_index()
+        dff['metric'] = label
+        dfs.append(dff)
+
+    dff_combined = pd.concat(dfs)
+
+    format_order = dff_combined.groupby('format')['value'].sum().sort_values(ascending=False).index.tolist()
+
+    fig = px.bar(
+        dff_combined,
+        x='value',
+        y='format',
+        color='metric',
+        barmode='group',
+        title='Total value USD and Units sold',
+        labels={'value': 'Value in USD and units sold', 'format': 'Format'},
+        category_orders={'format': format_order}
+    )
+
+    with st.container(border=True):
+        st.plotly_chart(fig, use_container_width=True)
 
