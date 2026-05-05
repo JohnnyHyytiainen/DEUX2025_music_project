@@ -131,4 +131,9 @@
     - **Done**
 
 - Refactor `src/dashboard/components/data_loader.py` script to read our .parquet files instead of our database
+    - **Done**
+
+**Tuesday 05/04-2026**
+*Goals for today:*
+- Refactor `global` dashboard scripts.
     - *ongoing*
