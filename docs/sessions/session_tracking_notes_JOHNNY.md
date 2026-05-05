@@ -136,10 +136,10 @@
 **Tuesday 05/04-2026**
 *Goals for today:*
 - Refactor `queries_global.py` script to adhear to DRY and modularity principles.
-    - *ongoing*
+    - **Done**
 
 - Refactor `charts_global.py` script to adhear to DRY and modularity principles.
-    - *ongoing*
+    - **Done**
 
 - Refactor `01_global_trends.py` script to adhear to DRY and modularity principles.
-    - *ongoing*
+    - **Done**
