@@ -67,3 +67,18 @@ def format_over_time_line_chart(metric, formats, years):
 
         fig.update_xaxes(tickangle=45)
         st.plotly_chart(fig, use_container_width=True)
+
+def total_sales_kpi(metric, formats, years, label):
+    format_list = "', '".join(formats)
+    total_sales = duckdb.sql(f"""--sql
+        SELECT
+            SUM(value) as total_sales
+        FROM df
+        WHERE metric like '{metric}'
+        AND year >= {years[0]}
+        AND year <= {years[1]}
+        AND format IN ('{format_list}')
+        """).df().iloc[0]
+
+    st.metric(label=f"Total sales in {label}", value=f"{total_sales['total_sales']:,.0f} Million")
+
