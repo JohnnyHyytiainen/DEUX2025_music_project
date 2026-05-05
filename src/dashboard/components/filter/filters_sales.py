@@ -1,6 +1,6 @@
 import streamlit as st
 from components.data_loader import fetch_data
-from components.queries.queries_physical_media import get_all_media_sales
+from components.queries.queries_sales import get_all_media_sales
 
 df = fetch_data(get_all_media_sales())
 
