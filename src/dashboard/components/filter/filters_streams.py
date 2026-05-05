@@ -10,5 +10,9 @@ def country_filter(countries_list):
 
 
 def date_filter(date_list):
-    return st.selectbox(label="Filter by date", options=date_list)
-    # implement slider as well?
+    #return st.selectbox(label="Filter by date", options=date_list)
+
+    return st.select_slider(
+        label="Filter by dates",
+        options=date_list,
+        value=(date_list[0], date_list[-1]))

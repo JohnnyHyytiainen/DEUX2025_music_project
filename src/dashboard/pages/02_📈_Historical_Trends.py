@@ -11,25 +11,27 @@ from components.queries.queries_global import get_continent_list_query  # ← Ha
 from components.queries.queries_historical import get_country_list_query, get_date_list_query, get_filtered_data_query  # ← Dina
 from components.filter.filters_streams import continent_filter, country_filter, date_filter
 
-st.title("Historical Trends")
+st.title("Top 10 most streamed songs")
 
+col1, col2 = st.columns(2)
 
-df_cont = fetch_data(get_continent_list_query())
-continents = ["Alla"] + df_cont["continent"].tolist()
-selected_cont = continent_filter(continents)
+with col1:
+    df_cont = fetch_data(get_continent_list_query())
+    continents = ["Alla"] + df_cont["continent"].tolist()
+    selected_cont = continent_filter(continents)
 
-
-df_country = fetch_data(get_country_list_query(selected_cont))
-countries = ["Alla"] + df_country["country"].tolist()
-selected_country = country_filter(countries)
+with col2:
+    df_country = fetch_data(get_country_list_query(selected_cont))
+    countries = ["Alla"] + df_country["country"].tolist()
+    selected_country = country_filter(countries)
 
 
 df_dates = fetch_data(get_date_list_query())
-dates = ["Alla"] + df_dates["snapshot_date"].tolist()
-selected_date = date_filter(dates)
+dates = df_dates["snapshot_date"].tolist()
+start_date, end_date = date_filter(dates)
 
 
-df = fetch_data(get_filtered_data_query(selected_cont, selected_country, selected_date))
+df = fetch_data(get_filtered_data_query(selected_cont, selected_country, start_date, end_date))
 df.index = df.index + 1
 st.dataframe(df)
 
