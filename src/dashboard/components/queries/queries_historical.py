@@ -13,10 +13,13 @@ def get_country_list_query(selected_cont):
 
 
 def get_date_list_query():
-    return "SELECT DISTINCT SUBSTRING(snapshot_date, 1, 10) as snapshot_date FROM silver_historical_charts ORDER BY snapshot_date"
+    return """SELECT DISTINCT SUBSTRING(snapshot_date, 1, 10) AS snapshot_date
+            FROM silver_historical_charts
+            WHERE snapshot_date NOT LIKE '2021-12-%'
+            ORDER BY snapshot_date"""
 
 
-def get_filtered_data_query(selected_cont, selected_country, start_date, end_date):
+def get_filter_query(selected_cont, selected_country, start_date, end_date):
     where = []
     if selected_cont != "Alla":
         where.append(f"d.continent = '{selected_cont}'")
@@ -27,17 +30,36 @@ def get_filtered_data_query(selected_cont, selected_country, start_date, end_dat
 
     where_sql = " AND ".join(where) if where else "1=1"
 
+    return where_sql
+
+def table_filter(selected_cont, selected_country, start_date, end_date):
+    where_sql = get_filter_query(selected_cont, selected_country, start_date, end_date)
+
     return f"""
         SELECT 
             h.name AS "Song title",
             h.artists AS Artists,
-            SUM(h.streams) as Streams
+            SUM(h.streams) AS Streams
         FROM silver_historical_charts h
         LEFT JOIN dim_geography d ON h.iso_code = d.iso_code
         WHERE {where_sql}
         GROUP BY "Song title", Artists
         ORDER BY streams DESC
         LIMIT 10
+    """
+
+def line_chart_filter(selected_cont, selected_country, start_date, end_date):
+    where_sql = get_filter_query(selected_cont, selected_country, start_date, end_date)
+
+    return f"""
+        SELECT
+          SUBSTRING(h.snapshot_date, 1, 10) AS Date,
+          SUM(h.streams) AS Streams
+        FROM silver_historical_charts h
+        LEFT JOIN dim_geography d ON h.iso_code = d.iso_code
+        WHERE {where_sql}
+        GROUP BY Date
+        ORDER BY Date
     """
 
 
