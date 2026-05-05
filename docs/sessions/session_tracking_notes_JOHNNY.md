@@ -131,4 +131,15 @@
     - **Done**
 
 - Refactor `src/dashboard/components/data_loader.py` script to read our .parquet files instead of our database
-    - *ongoing*
+    - **Done**
+
+**Tuesday 05/04-2026**
+*Goals for today:*
+- Refactor `queries_global.py` script to adhear to DRY and modularity principles.
+    - **Done**
+
+- Refactor `charts_global.py` script to adhear to DRY and modularity principles.
+    - **Done**
+
+- Refactor `01_global_trends.py` script to adhear to DRY and modularity principles.
+    - **Done**

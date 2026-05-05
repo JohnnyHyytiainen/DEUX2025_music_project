@@ -2,16 +2,40 @@
 # Kommentarer: Svenska
 # Kod: Engelska
 
-# Top explicita länderna i varje kontinent
+# ========================
+# Privat helper funktioner
+# ========================
+def _build_geo_where_clause(
+    continent: str, main_table_alias: str = "s", geo_table_alias: str = "g"
+) -> str:
+    """Helper function to build DYNAMIC WHERE clause for filtering geography."""
+    where_clause = f"WHERE {main_table_alias}.country != 'Global'"
+    if continent and continent != "Global":
+        where_clause += f" AND {geo_table_alias}.continent = '{continent}'"
+    return where_clause
+
+
+# =====================================
+# Ren lista av kontinenter
+# Syfte: filtrerar bort onödigt "skräp"
+# =====================================
+def get_continent_list_query() -> str:
+    """Gets a clean list of continents. Filters away useless garbage."""
+    return """--sql
+    SELECT DISTINCT continent 
+    FROM dim_geography 
+    WHERE continent IS NOT NULL 
+      AND continent NOT IN ('Antarctica', 'Other', 'Worldwide') 
+    ORDER BY continent ASC
+    """
+
+
+# ==========================================
+# Top Explicita länderna på varje kontinent
+# ==========================================
 def get_top_explicit_query(continent: str) -> str:
     """Returns query to get countries with most explicit music taste."""
-    # Bygga WHERE clause dynamiskt
-    where_clause = "WHERE s.country != 'Global'"
-    # Om användaren valt en specifik kontinent i Streamlit, lägg till filter
-    if continent and continent != "Global":
-        where_clause += f" AND g.continent = '{continent}'"
-    # Läser ifrån 'gold_spotify_daily' och väljer 'country_name'
-    # Döper det till 'country' i output (AS country) så streamlit koden behöver ej ändras öht.
+    where_clause = _build_geo_where_clause(continent)  # Använder priv helper funktionen
     return f"""--sql
     SELECT 
         g.country_name AS country, 
@@ -26,28 +50,12 @@ def get_top_explicit_query(continent: str) -> str:
     """
 
 
-# Ren lista av kontinenter, filtrerar bort onödiga skräp
-def get_continent_list_query() -> str:
-    """Gets a clean list of continents. Filters away useless garbage."""
-    return """--sql
-    SELECT DISTINCT continent 
-    FROM dim_geography 
-    WHERE continent IS NOT NULL 
-      AND continent NOT IN ('Antarctica', 'Other', 'Worldwide') 
-    ORDER BY continent ASC
-    """
-
-
-# Här efter kan vi lägga till flera queries som vi vill visa på sida 1 av vår dashboard.
-# def get_vad_som_helst / def kings_of_valence / def ...... ....
+# ==============================================================
+# Glädje(Valence) och Tempo för varje kontinent och dess länder
+# ==============================================================
 def get_mood_and_tempo_query(continent: str) -> str:
     """Returns query to get both Valence and tempo, can now filter by continent"""
-    where_clause = "WHERE country != 'Global'"
-
-    # Om vi valt en specifik kontinent, filtrera på den
-    if continent and continent != "Global":
-        where_clause += f" AND g.continent = '{continent}'"
-
+    where_clause = _build_geo_where_clause(continent)
     return f"""--sql
     SELECT 
         g.country_name AS country,
@@ -62,9 +70,54 @@ def get_mood_and_tempo_query(continent: str) -> str:
     """
 
 
-# sorterar på låtens högsta popularitet globalt så DJn får de största bangersen först
-# Eftersom BPM, Happiness och Energy är samma för en och samma låt
-# kan vi bara ta MAX() för att få ut värdet när vi grupperar.
+# ===========================================
+# Query för att hitta världens "dancefloor"
+# Syfte: Hitta Danceability och Energy i låtar
+# ============================================
+def get_dancefloor_songs_query(continent: str) -> str:
+    """Retrieves the top 400 songs in chosen region for a massive scatter plot"""
+    where_clause = _build_geo_where_clause(continent)
+    return f"""--sql
+    SELECT
+        s.name AS Song,
+        s.artists AS Artist,
+        MAX(s.energy) * 100 AS Energy,
+        MAX(s.danceability) * 100 AS Danceability,
+        MAX(s.popularity) AS Popularity
+    FROM gold_spotify_daily s
+    LEFT JOIN dim_geography g ON s.country = g.iso_code
+    {where_clause}
+    GROUP BY s.name, s.artists
+    ORDER BY Popularity DESC
+    LIMIT 450
+    """
+
+
+# ======================================================================
+# Query för akustisk musik och/VS producerad musik
+# Syfte: tt få fram "organisk" vs producerad musik(acousticness 0-1)
+# =====================================================================
+def get_acoustic_loudness_query(continent: str) -> str:
+    """Gets Acousticness and Loudness to compare 'organic' vs produced music"""
+    where_clause = _build_geo_where_clause(continent)
+    return f"""--sql
+    SELECT
+        g.country_name AS country,
+        AVG(s.acousticness) * 100 AS avg_acousticness,
+        AVG(s.loudness) AS avg_loudness,
+        COUNT(DISTINCT s.spotify_id) as track_count
+    FROM silver_spotify_daily s
+    LEFT JOIN dim_geography g ON s.country = g.iso_code
+    {where_clause}
+    GROUP BY g.country_name
+    HAVING track_count > 100
+    """
+
+
+# ================================================================
+# Songfinder i PowerBI dashboarden fast i streamlit.
+# Syfte: Hitta BÄST matchande låt/låtar beroende på sökparametrar
+# ================================================================
 def get_dj_crate_query(bpm_range, valence_range, energy_range, is_explicit, limit_top):
     """Queries UNIQUE songs based on 'dj filter(BPM, Mood, Energy)."""
     explicit_filter = "AND is_explicit = " + str(is_explicit).lower()
@@ -87,49 +140,4 @@ def get_dj_crate_query(bpm_range, valence_range, energy_range, is_explicit, limi
     
     ORDER BY MAX(popularity) DESC
     {sql_limit}
-    """
-
-
-# Query för att hitta världens "dancefloor" med dynamisk WHERE clause som ovan
-def get_dancefloor_songs_query(continent: str) -> str:
-    """Retrieves the top 400 songs in chosen region for a massive scatter plot"""
-    where_clause = "WHERE s.country != 'Global'"
-
-    if continent and continent != "Global":
-        where_clause += f" AND g.continent = '{continent}'"
-
-    return f"""--sql
-    SELECT
-        s.name AS Song,
-        s.artists AS Artist,
-        MAX(s.energy) * 100 AS Energy,
-        MAX(s.danceability) * 100 AS Danceability,
-        MAX(s.popularity) AS Popularity
-    FROM gold_spotify_daily s
-    LEFT JOIN dim_geography g ON s.country = g.iso_code
-    {where_clause}
-    GROUP BY s.name, s.artists
-    ORDER BY Popularity DESC
-    LIMIT 450
-    """
-
-
-# Query för att få fram "organisk" vs producerad musik(acousticness 0-1)
-def get_acoustic_loudness_query(continent: str) -> str:
-    """Gets Acousticness and Loudness to compare 'organic' vs produced music"""
-    where_clause = "WHERE s.country != 'Global'"
-    if continent and continent != "Global":
-        where_clause += f" AND g.continent = '{continent}'"
-
-    return f"""--sql
-    SELECT
-        g.country_name AS country,
-        AVG(s.acousticness) * 100 AS avg_acousticness,
-        AVG(s.loudness) AS avg_loudness,
-        COUNT(DISTINCT s.spotify_id) as track_count
-    FROM silver_spotify_daily s
-    LEFT JOIN dim_geography g ON s.country = g.iso_code
-    {where_clause}
-    GROUP BY g.country_name
-    HAVING track_count > 100
     """
