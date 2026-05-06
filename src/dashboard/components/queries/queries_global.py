@@ -3,16 +3,40 @@
 # Kod: Engelska
 
 # ========================
-# Privat helper funktioner
+# Helper funktioner
 # ========================
 def _build_geo_where_clause(
-    continent: str, main_table_alias: str = "s", geo_table_alias: str = "g"
+    continent: str,
+    main_table_alias: str = "s",
+    geo_table_alias: str = "g",
+    is_explicit: bool = True,
 ) -> str:
     """Helper function to build DYNAMIC WHERE clause for filtering geography."""
     where_clause = f"WHERE {main_table_alias}.country != 'Global'"
+
     if continent and continent != "Global":
         where_clause += f" AND {geo_table_alias}.continent = '{continent}'"
+
+    if not is_explicit:
+        where_clause += f" AND {main_table_alias}.is_explicit = 0"
+
     return where_clause
+
+
+def get_countries_in_continent_query(continent: str) -> str:
+    """Gets a list of countries for the selected continent THAT ACTUALLY HAVE SPOTIFY DATA."""
+
+    where_clause = f"WHERE g.continent = '{continent}'" if continent != "Global" else ""
+
+    # INNER JOIN så SQL att bara returnera de länder som matchar
+    # (dvs de som har låtar) i gold_spotify_daily.
+    return f"""--sql
+    SELECT DISTINCT g.country_name 
+    FROM dim_geography g
+    INNER JOIN gold_spotify_daily s ON g.iso_code = s.country
+    {where_clause}
+    ORDER BY g.country_name ASC
+    """
 
 
 # =====================================
@@ -35,7 +59,7 @@ def get_continent_list_query() -> str:
 # ==========================================
 def get_top_explicit_query(continent: str) -> str:
     """Returns query to get countries with most explicit music taste."""
-    where_clause = _build_geo_where_clause(continent)  # Använder priv helper funktionen
+    where_clause = _build_geo_where_clause(continent, is_explicit=True)
     return f"""--sql
     SELECT 
         g.country_name AS country, 
@@ -53,9 +77,9 @@ def get_top_explicit_query(continent: str) -> str:
 # ==============================================================
 # Glädje(Valence) och Tempo för varje kontinent och dess länder
 # ==============================================================
-def get_mood_and_tempo_query(continent: str) -> str:
+def get_mood_and_tempo_query(continent: str, is_explicit: bool) -> str:
     """Returns query to get both Valence and tempo, can now filter by continent"""
-    where_clause = _build_geo_where_clause(continent)
+    where_clause = _build_geo_where_clause(continent, is_explicit=is_explicit)
     return f"""--sql
     SELECT 
         g.country_name AS country,
@@ -67,6 +91,7 @@ def get_mood_and_tempo_query(continent: str) -> str:
     {where_clause}
     GROUP BY g.country_name
     HAVING unique_songs_played > 100
+    LIMIT 15
     """
 
 
@@ -74,9 +99,9 @@ def get_mood_and_tempo_query(continent: str) -> str:
 # Query för att hitta världens "dancefloor"
 # Syfte: Hitta Danceability och Energy i låtar
 # ============================================
-def get_dancefloor_songs_query(continent: str) -> str:
-    """Retrieves the top 400 songs in chosen region for a massive scatter plot"""
-    where_clause = _build_geo_where_clause(continent)
+def get_dancefloor_songs_query(continent: str, is_explicit: bool) -> str:
+    """Retrieves the top songs in chosen region for a massive scatter plot"""
+    where_clause = _build_geo_where_clause(continent, is_explicit=is_explicit)
     return f"""--sql
     SELECT
         s.name AS Song,
@@ -97,9 +122,9 @@ def get_dancefloor_songs_query(continent: str) -> str:
 # Query för akustisk musik och/VS producerad musik
 # Syfte: tt få fram "organisk" vs producerad musik(acousticness 0-1)
 # =====================================================================
-def get_acoustic_loudness_query(continent: str) -> str:
-    """Gets Acousticness and Loudness to compare 'organic' vs produced music"""
-    where_clause = _build_geo_where_clause(continent)
+def get_acoustic_loudness_query(continent: str, is_explicit: bool) -> str:
+    """Gets Acousticness to compare 'organic' vs produced music"""
+    where_clause = _build_geo_where_clause(continent, is_explicit=is_explicit)
     return f"""--sql
     SELECT
         g.country_name AS country,
@@ -117,37 +142,35 @@ def get_acoustic_loudness_query(continent: str) -> str:
 # ========================================================================
 # Query för radar-chart för att jämföra valda regioner i gold_spotify_daily
 # ========================================================================
-def get_audio_signature_query(region1: str, region2: str) -> str:
-    """Gets average audio DNA for TWO selected regions."""
+def get_country_audio_signature_query(
+    country1: str, country2: str, is_explicit: bool
+) -> str:
+    """Gets average audio DNA for TWO selected COUNTRIES, with explicit filter."""
 
-    def build_single_region_select(region, alias):
-        # Om båda valen är identiska använd ett alias så Plotly kan separera dom
-        is_duplicate = region1 == region2
+    # Skapa filtret för explicit musik
+    explicit_filter = "" if is_explicit else "AND is_explicit = 0"
 
-        if region == "Global":
-            where_clause = "WHERE s.country = 'Global'"
-            display_name = f"Global ({alias})" if is_duplicate else "Global"
-        else:
-            where_clause = _build_geo_where_clause(region)
-            display_name = f"{region} ({alias})" if is_duplicate else region
+    def build_country_select(country, alias):
+        # Skydd mot identiska val
+        is_duplicate = country1 == country2
+        display_name = f"{country} ({alias})" if is_duplicate else country
 
         return f"""
         SELECT 
             '{display_name}' AS Region,
-            AVG(s.danceability) * 100 AS Danceability,
-            AVG(s.energy) * 100 AS Energy,
-            AVG(s.valence) * 100 AS Happiness,
-            AVG(s.acousticness) * 100 AS Acousticness,
-            AVG(s.speechiness) * 100 AS Speechiness
-        FROM gold_spotify_daily s
-        LEFT JOIN dim_geography g ON s.country = g.iso_code
-        {where_clause}
+            AVG(danceability) * 100 AS Danceability,
+            AVG(energy) * 100 AS Energy,
+            AVG(valence) * 100 AS Happiness,
+            AVG(acousticness) * 100 AS Acousticness,
+            AVG(speechiness) * 100 AS Speechiness
+        FROM gold_spotify_daily
+        WHERE country_name = '{country}'
+        {explicit_filter}
         """
 
-    query1 = build_single_region_select(region1, "Reg 1")
-    query2 = build_single_region_select(region2, "Reg 2")
+    query1 = build_country_select(country1, "Val 1")
+    query2 = build_country_select(country2, "Val 2")
 
-    # Returnerar users två valda regionerna
     return f"{query1} \n UNION ALL \n {query2}"
 
 
