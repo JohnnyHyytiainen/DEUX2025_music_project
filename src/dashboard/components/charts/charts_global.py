@@ -2,86 +2,108 @@ import plotly.express as px
 import pandas as pd
 
 
-# ===========================================
-# BASE CHART BUILDER PRIV FUNKTION DONT TOUCH
-# ===========================================
-def _create_base_hbar_chart(
-    df, x_col: str, x_label: str, color: str, is_ascending: bool
-):
-    """Base function to generate horizontal bar-charts with consistent styling"""
-    order = "total ascending" if is_ascending else "total descending"
+# ==============================================================
+# SPEKTRUM-GRAFER FÖR MOOD OCH TEMPO (MAKRO-PERSPEKTIV)
+# ==============================================================
+
+
+def create_mood_spectrum_chart(df):
+    """Creates a single macro-level bar chart for Happiness with a color gradient."""
+    # Sortera så att det gladaste landet hamnar högst upp i grafen
+    df_sorted = df.sort_values(by="happiness_score", ascending=True)
 
     fig = px.bar(
-        df,
-        x=x_col,
+        df_sorted,
+        x="happiness_score",
         y="country",
         orientation="h",
-        color_discrete_sequence=[color],
-        labels={"country": "", x_col: x_label},
+        color="happiness_score",
+        color_continuous_scale=["#1A1A95", "#CBC835"],
+        labels={"country": "", "happiness_score": "Happiness Index (0-100)"},
     )
-    fig.update_layout(yaxis={"categoryorder": order})
+
+    fig.update_layout(
+        coloraxis_showscale=False,
+        xaxis=dict(range=[0, 100]),  # TVINGA axeln till 0-100 enligt UX-krav
+        plot_bgcolor="rgba(0,0,0,0.08)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(l=0, r=0, t=10, b=0),  # Minskar onödiga marginaler
+    )
     return fig
 
 
-# ---------- SPECIFIKA CHARTS MED BASE CHART BUILDER ----------
-# Mood H bar-chart
-def create_mood_bar_chart(df, is_happy=True):
-    """Creates horizontal bar chart for happy and melancholic music."""
-    color = "#CBC835" if is_happy else "#1A1A95"
-    return _create_base_hbar_chart(
-        df=df,
-        x_col="happiness_score",
-        x_label="Happiness Index (0-100)",
-        color=color,
-        is_ascending=is_happy,
-    )
+def create_acoustic_spectrum_chart(df):
+    """Creates a macro-level bar chart for Acousticness vs Electronic."""
+    df_sorted = df.sort_values(by="avg_acousticness", ascending=True)
 
-
-# ---------- SPECIFIKA CHARTS MED BASE CHART BUILDER ----------
-# Tempo H bar-chart vid sidan av mood chart
-def create_tempo_bar_chart(df, is_fast=True):
-    """Creates a H-bar chart for fast/slow tempo music."""
-    color = "#CBC835" if is_fast else "#1A1A95"
-    return _create_base_hbar_chart(
-        df=df,
-        x_col="avg_bpm",
-        x_label="Average Tempo (BPM)",
-        color=color,
-        is_ascending=is_fast,
-    )
-
-
-# ---------- SPECIFIKA CHARTS MED BASE CHART BUILDER ----------
-# Akustisk/producerad H bar-chart
-# Grön "jordig ton" = akustisk musik.
-# Lila "intensiv/artificiell ton" = producerad/elektronisk musik.
-def create_acoustic_bar_chart(df, is_acoustic=True):
-    """Creates a horizontal barchart over the most aucustic Nations"""
-    color = "#2E8B57" if is_acoustic else "#8A2BE2"
-    return _create_base_hbar_chart(
-        df=df,
-        x_col="avg_acousticness",
-        x_label="Acousticness Index (0-100)",
-        color=color,
-        is_ascending=is_acoustic,
-    )
-
-
-# ===============================================================
-# Skapar barchart för explicit musik och dess andel(%) för länder
-# ===============================================================
-def create_explicit_bar_chart(df):
-    """Creates bar chart for share of explicit music by country"""
     fig = px.bar(
-        df,
-        x="country",
-        y="Explicit_Procent",
+        df_sorted,
+        x="avg_acousticness",
+        y="country",
+        orientation="h",
+        color="avg_acousticness",
+        color_continuous_scale=[
+            "#8A2BE2",
+            "#2E8B57",
+        ],
+        labels={"country": "", "avg_acousticness": "Acousticness Index (0-100)"},
+    )
+
+    fig.update_layout(
+        coloraxis_showscale=False,
+        xaxis=dict(range=[0, 100]),
+        plot_bgcolor="rgba(0,0,0,0.08)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(l=0, r=0, t=10, b=0),
+    )
+    return fig
+
+
+def create_explicit_spectrum_chart(df):
+    """Creates a macro-level bar chart for share of Explicit music."""
+    df_sorted = df.sort_values(by="Explicit_Procent", ascending=True)
+
+    fig = px.bar(
+        df_sorted,
+        x="Explicit_Procent",
+        y="country",
+        orientation="h",
         color="Explicit_Procent",
         color_continuous_scale="Purples",
-        labels={"country": "Land", "Explicit_Procent": "Explicit Musik (%)"},
-        title="Explicit Musik (%)",
+        labels={"country": "", "Explicit_Procent": "Explicit Music (%)"},
     )
-    fig.update_layout(coloraxis_showscale=False)
+
+    fig.update_layout(
+        coloraxis_showscale=False,
+        xaxis=dict(range=[0, 100]),
+        plot_bgcolor="rgba(0,0,0,0.08)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(l=0, r=0, t=10, b=0),
+    )
+    return fig
+
+
+def create_tempo_spectrum_chart(df):
+    """Creates a single macro-level bar chart for Tempo with a color gradient."""
+    df_sorted = df.sort_values(by="avg_bpm", ascending=True)
+
+    fig = px.bar(
+        df_sorted,
+        x="avg_bpm",
+        y="country",
+        orientation="h",
+        color="avg_bpm",
+        color_continuous_scale=["#4B4BFF", "#FF4B4B"],
+        labels={"country": "", "avg_bpm": "Average Tempo (BPM)"},
+    )
+
+    fig.update_layout(
+        coloraxis_showscale=False,
+        xaxis=dict(range=[60, 160]),
+        plot_bgcolor="rgba(0,0,0,0.08)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(l=0, r=0, t=10, b=0),
+    )
     return fig
 
 
@@ -110,9 +132,26 @@ def create_dancefloor_scatter(df):
         paper_bgcolor="rgba(0, 0, 0, 0)",  # <-- Håller ytan runt grafen helt transparent
     )
     # Lägg till ett kors i mitten som referens (index 50)
-    fig.add_vline(x=50, line_dash="dash", line_color="#8D8D8D", opacity=0.70)
-    fig.add_hline(y=50, line_dash="dash", line_color="#8D8D8D", opacity=0.70)
+    fig.add_vline(x=50, line_dash="dash", line_color="#8D8D8D", opacity=0.60)
+    fig.add_hline(y=50, line_dash="dash", line_color="#8D8D8D", opacity=0.60)
 
+    # --- UX COPY, TEXT I FYRA HÖRNEN ---
+    fig.add_annotation(
+        x=5, y=95, text="High Energy<br>Low Danceability", showarrow=False, opacity=0.8
+    )
+    fig.add_annotation(
+        x=95,
+        y=95,
+        text="High Energy<br>High Danceability",
+        showarrow=False,
+        opacity=0.8,
+    )
+    fig.add_annotation(
+        x=5, y=5, text="Low Energy<br>Low Danceability", showarrow=False, opacity=0.8
+    )
+    fig.add_annotation(
+        x=95, y=5, text="Low Energy<br>High Danceability", showarrow=False, opacity=0.8
+    )
     # Tvinga axlarna att visa hela spannet så man ser tomrummen
     fig.update_xaxes(range=[0, 100])
     fig.update_yaxes(range=[0, 100])
