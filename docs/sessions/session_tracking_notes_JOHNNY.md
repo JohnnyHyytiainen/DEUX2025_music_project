@@ -143,3 +143,9 @@
 
 - Refactor `01_global_trends.py` script to adhear to DRY and modularity principles.
     - **Done**
+
+- Remove music finder query from global because Rikard is going to use it for his streamlit page
+    - **Done**
+
+- Start working on a radar chart for global page in streamlit dashboard
+    - *Ongoing*

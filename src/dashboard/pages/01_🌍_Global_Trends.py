@@ -7,9 +7,9 @@ from components.queries.queries_global import (
     get_top_explicit_query,
     get_continent_list_query,
     get_mood_and_tempo_query,
-    get_dj_crate_query,
     get_dancefloor_songs_query,
     get_acoustic_loudness_query,
+    get_audio_signature_query,
 )
 from components.charts.charts_global import (
     create_explicit_bar_chart,
@@ -17,6 +17,7 @@ from components.charts.charts_global import (
     create_tempo_bar_chart,
     create_dancefloor_scatter,
     create_acoustic_bar_chart,
+    create_audio_signature_radar,
 )
 
 st.set_page_config(page_title="Global Music Trends", page_icon="🌍", layout="wide")
@@ -27,7 +28,12 @@ st.set_page_config(page_title="Global Music Trends", page_icon="🌍", layout="w
 # ==========================================
 def initialize_state():
     """Initiates all needed session_states dynamically."""
-    state_keys = ["explicit_continent", "mood_continent", "anatomy_continent"]
+    state_keys = [
+        "explicit_continent",
+        "mood_continent",
+        "anatomy_continent",
+        "signature_continent",
+    ]
     for keys in state_keys:
         if keys not in st.session_state:
             st.session_state[keys] = "Global"
@@ -150,66 +156,40 @@ def render_anatomy_section(continent_list):
             )
 
 
-# Songfinder ifrån PowerBI dashboarden.
-def render_dj_matcher_section():
-    st.header("DJ Music Matcher")
+# Jämföra länders musiksmak vs global basline
+def render_audio_signature_section(continent_list):
+    st.header("The Cultural Audio Signature")
     st.markdown(
-        "Find the perfect songs for your playlist based on technical parameters."
+        "Compare the musical 'DNA' of two regions. Select 'Global' to see how a region measures up against the world average."
     )
 
-    ctrl_col1, ctrl_col2, ctrl_col3 = st.columns(3)
-    with ctrl_col1:
-        bpm_range = st.slider("Select BPM range:", 60, 200, (60, 200))
-        is_explicit = st.checkbox("Show only Explicit songs", value=False)
-    with ctrl_col2:
-        valence_range = st.slider("Happiness (Valence %):", 0, 100, (0, 100))
-        limit_top = st.checkbox("Show only Top 20", value=True)
-    with ctrl_col3:
-        energy_range = st.slider("Energy level (Energy %):", 0, 100, (0, 100))
+    col1, col2 = st.columns(2)
 
-    query_dj = get_dj_crate_query(
-        bpm_range, valence_range, energy_range, is_explicit, limit_top
-    )
-    df_dj = fetch_data(query_dj)
+    with col1:
+        region1 = st.selectbox(
+            "Select Region 1:", options=continent_list, key="sig_reg_1"
+        )
+    with col2:
+        region2 = st.selectbox(
+            "Select Region 2:", options=continent_list, key="sig_reg_2"
+        )
 
-    if not df_dj.empty:
-        st.success(f"Found {len(df_dj)} songs that match your criteria!")
-        st.dataframe(df_dj, use_container_width=True, hide_index=True)
-    else:
-        st.warning("No songs matched that combination. Try expanding your search!")
+    df_signature = fetch_data(get_audio_signature_query(region1, region2))
 
+    if not df_signature.empty:
+        col_text, col_chart = st.columns([1, 2.5])
 
-# ====================================================
-# 3) MAIN CONTROLLER funktion (Dirigenten för allting)
-# ====================================================
-def main():
-    initialize_state()
+        with col_text:
+            st.write(f"**Comparing:**\n1. {region1}\n2. {region2}")
+            st.write("Hover over the edges to see the exact scores.")
+            st.write(
+                "Pro tip: Set one of the regions to 'Global' to establish a baseline!"
+            )
 
-    # Header
-    st.title("Cultural Differences in Music")
-    st.markdown("Explore how different regions consume music based on Spotify's data.")
-    st.button("Reset ALL Region Filters", on_click=reset_all_filters, type="primary")
-    st.divider()
-
-    # Global Data Fetcher
-    df_continents = fetch_data(get_continent_list_query())
-    continent_list = (
-        ["Global"] + df_continents["continent"].tolist()
-        if not df_continents.empty
-        else ["Global"]
-    )
-
-    # Render Sections och sätt dividers mellan varje section
-    render_explicit_section(continent_list)
-    st.divider()
-
-    render_mood_and_tempo_section(continent_list)
-    st.divider()
-
-    render_anatomy_section(continent_list)
-    st.divider()
-
-    render_dj_matcher_section()
+        with col_chart:
+            st.plotly_chart(
+                create_audio_signature_radar(df_signature), use_container_width=True
+            )
 
 
 # ===============================================
@@ -242,7 +222,8 @@ def main():
     render_anatomy_section(continent_list)
     st.divider()
 
-    render_dj_matcher_section()
+    render_audio_signature_section(continent_list)
+    st.divider()
 
 
 if __name__ == "__main__":

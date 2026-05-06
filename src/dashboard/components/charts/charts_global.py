@@ -1,4 +1,5 @@
 import plotly.express as px
+import pandas as pd
 
 
 # ===========================================
@@ -111,4 +112,63 @@ def create_dancefloor_scatter(df):
     # Tvinga axlarna att visa hela spannet så man ser tomrummen
     fig.update_xaxes(range=[0, 100])
     fig.update_yaxes(range=[0, 100])
+    return fig
+
+
+# ===============================================================
+# Radar chart för Kulturella jämförelser i regionens vibes/musik
+# ===============================================================
+def create_audio_signature_radar(df):
+    """Creates a Radar chart comparing the audio DNA of two selected regions."""
+    features = ["Danceability", "Energy", "Happiness", "Acousticness", "Speechiness"]
+
+    # Smält datan från wide till long format
+    df_melted = df.melt(
+        id_vars=["Region"], value_vars=features, var_name="Feature", value_name="Score"
+    )
+
+    df_melted["Score"] = df_melted["Score"].round(1)
+
+    # Spotify-grön och en snygg lila färg
+    colors = ["#1DB954", "#8A2BE2"]
+
+    fig = px.line_polar(
+        df_melted,
+        r="Score",
+        theta="Feature",
+        color="Region",
+        line_close=True,
+        color_discrete_sequence=colors,
+        hover_name="Region",  # Sätter regionens namn i toppen av rutan jag hovrar över
+        markers=True,
+    )
+    # %{theta} hämtar Feature (typ Energy) och %{r} hämtar Score.
+    # <extra></extra> tar bort den extra fula rutan bredvid
+    fig.update_traces(
+        fill="toself",
+        opacity=0.5,
+        marker=dict(size=8),
+        hovertemplate="<b>%{hovertext}</b><br>%{theta}: %{r}<extra></extra>",
+    )
+
+    fig.update_layout(
+        polar=dict(
+            bgcolor="rgba(0,0,0,0)",
+            radialaxis=dict(
+                visible=True,
+                showticklabels=False,  # Gömmer statiska siffror, behöver ej det då jag kör hover over
+                showgrid=True,
+                gridcolor="rgba(255,255,255,0.1)",
+                linecolor="rgba(255,255,255,0.1)",
+            ),
+            angularaxis=dict(
+                gridcolor="rgba(255,255,255,0.1)", linecolor="rgba(255,255,255,0.1)"
+            ),
+        ),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        showlegend=True,
+        title="Audio Signature (DNA)",
+        hovermode="closest",
+    )
     return fig
