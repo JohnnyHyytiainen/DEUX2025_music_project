@@ -97,17 +97,21 @@ def create_dancefloor_scatter(df):
         hover_name="Song",
         hover_data=["Artist"],
         color="Energy",
-        color_continuous_scale="Plasma",
+        color_continuous_scale="Burgyl",
         labels={
             "Danceability": "Danceability Index (0-100)",
             "Energy": "Energy Index (0-100)",
         },
         title="The Global Dancefloor: Energy vs. Danceability",
     )
-    fig.update_layout(coloraxis_showscale=False)
+    fig.update_layout(
+        coloraxis_showscale=False,
+        plot_bgcolor="rgba(0, 0, 0, 0.03)",  # <-- Skapar en svag mörk, semi-transparent ruta
+        paper_bgcolor="rgba(0, 0, 0, 0)",  # <-- Håller ytan runt grafen helt transparent
+    )
     # Lägg till ett kors i mitten som referens (index 50)
-    fig.add_vline(x=50, line_dash="dash", line_color="#8D8D8D", opacity=0.55)
-    fig.add_hline(y=50, line_dash="dash", line_color="#8D8D8D", opacity=0.55)
+    fig.add_vline(x=50, line_dash="dash", line_color="#8D8D8D", opacity=0.70)
+    fig.add_hline(y=50, line_dash="dash", line_color="#8D8D8D", opacity=0.70)
 
     # Tvinga axlarna att visa hela spannet så man ser tomrummen
     fig.update_xaxes(range=[0, 100])
@@ -153,16 +157,16 @@ def create_audio_signature_radar(df):
 
     fig.update_layout(
         polar=dict(
-            bgcolor="rgba(0,0,0,0)",
+            bgcolor="rgba(0,0,0,0.03)",
             radialaxis=dict(
                 visible=True,
                 showticklabels=False,  # Gömmer statiska siffror, behöver ej det då jag kör hover over
                 showgrid=True,
-                gridcolor="rgba(255,255,255,0.1)",
-                linecolor="rgba(255,255,255,0.1)",
+                gridcolor="rgba(0,0,0,0.03)",
+                linecolor="rgba(0,0,0,0.03)",
             ),
             angularaxis=dict(
-                gridcolor="rgba(255,255,255,0.1)", linecolor="rgba(255,255,255,0.1)"
+                gridcolor="rgba(0,0,0,0.03)", linecolor="rgba(0,0,0,0.03)"
             ),
         ),
         paper_bgcolor="rgba(0,0,0,0)",
