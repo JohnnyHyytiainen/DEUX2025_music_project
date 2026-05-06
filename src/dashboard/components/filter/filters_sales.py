@@ -5,7 +5,7 @@ from components.queries.queries_sales import get_all_media_sales
 df = fetch_data(get_all_media_sales())
 
 def metrics_filter():
-    return st.selectbox(label='Select metric', options=df['metric'].unique())
+    return st.selectbox(label='Select metric', options=df['metric'].unique(), )
 
 def format_filter():
     options = df['format'].unique().tolist()
