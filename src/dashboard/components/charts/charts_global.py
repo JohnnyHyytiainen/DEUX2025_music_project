@@ -119,47 +119,56 @@ def create_dancefloor_scatter(df):
 # Radar chart för Kulturella jämförelser i regionens vibes/musik
 # ===============================================================
 def create_audio_signature_radar(df):
-    """Creates a Radar chart comparing the audio DNA of a region vs Global baseline."""
-    # Lista för de kolumner jag vill rita ut i grafen
+    """Creates a Radar chart comparing the audio DNA of two selected regions."""
     features = ["Danceability", "Energy", "Happiness", "Acousticness", "Speechiness"]
 
-    # Konverterar från Wide till Long format
-    # format på mina kolumner blir: Region | Feature | Score
+    # Smält datan från wide till long format
     df_melted = df.melt(
         id_vars=["Region"], value_vars=features, var_name="Feature", value_name="Score"
     )
 
+    df_melted["Score"] = df_melted["Score"].round(1)
+
+    # Spotify-grön och en snygg lila färg
+    colors = ["#1DB954", "#8A2BE2"]
+
     fig = px.line_polar(
         df_melted,
-        r="Score",  # Värdet (0-100)
-        theta="Feature",  # Kategorin den tillhör
-        color="Region",  # Ritar en linje per region
-        line_close=True,  # Knyter ihop sista punkten med första
-        color_discrete_sequence=[
-            "#1DB954",
-            "#8D8D8D",
-        ],  # Spotifygrön och basline som grå
+        r="Score",
+        theta="Feature",
+        color="Region",
+        line_close=True,
+        color_discrete_sequence=colors,
+        hover_name="Region",  # Sätter regionens namn i toppen av rutan jag hovrar över
+        markers=True,
     )
-
-    fig.update_traces(fill="toself", opacity=0.6)
+    # %{theta} hämtar Feature (typ Energy) och %{r} hämtar Score.
+    # <extra></extra> tar bort den extra fula rutan bredvid
+    fig.update_traces(
+        fill="toself",
+        opacity=0.5,
+        marker=dict(size=8),
+        hovertemplate="<b>%{hovertext}</b><br>%{theta}: %{r}<extra></extra>",
+    )
 
     fig.update_layout(
         polar=dict(
-            bgcolor="rgba(0,0,0,0)",  # Gör inre cirkeln transparent
+            bgcolor="rgba(0,0,0,0)",
             radialaxis=dict(
                 visible=True,
-                showticklabels=False,  # Gömmer fula siffrorna på axeln
+                showticklabels=False,  # Gömmer statiska siffror, behöver ej det då jag kör hover over
                 showgrid=True,
-                gridcolor="rgba(255,255,255,0.1)",  # mer diskreta nätlinjer
+                gridcolor="rgba(255,255,255,0.1)",
                 linecolor="rgba(255,255,255,0.1)",
             ),
             angularaxis=dict(
                 gridcolor="rgba(255,255,255,0.1)", linecolor="rgba(255,255,255,0.1)"
             ),
         ),
-        paper_bgcolor="rgba(0,0,0,0)",  # Gör yttre kanten genomskinlig
+        paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         showlegend=True,
         title="Audio Signature (DNA)",
+        hovermode="closest",
     )
     return fig

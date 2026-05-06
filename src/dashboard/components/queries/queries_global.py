@@ -117,40 +117,38 @@ def get_acoustic_loudness_query(continent: str) -> str:
 # ========================================================================
 # Query för radar-chart för att jämföra valda regioner i gold_spotify_daily
 # ========================================================================
-def get_audio_signature_query(continent: str) -> str:
-    """Gets average audio DNA for selected region AND the Global baseline for comparison."""
-    if continent == "Global":
-        top_where = "WHERE s.country = 'Global'"
-        region_name = "Global Selection"
-    else:
-        top_where = _build_geo_where_clause(continent)
-        region_name = continent
+def get_audio_signature_query(region1: str, region2: str) -> str:
+    """Gets average audio DNA for TWO selected regions."""
 
-    return f"""--sql
-    SELECT 
-        '{region_name}' AS Region,
-        AVG(s.danceability) * 100 AS Danceability,
-        AVG(s.energy) * 100 AS Energy,
-        AVG(s.valence) * 100 AS Happiness,
-        AVG(s.acousticness) * 100 AS Acousticness,
-        AVG(s.speechiness) * 100 AS Speechiness
-    FROM gold_spotify_daily s
-    LEFT JOIN dim_geography g ON s.country = g.iso_code
-    {top_where}
-    
-    UNION ALL
-    
-    -- Query som alltid hämtar den fasta, globala baslinen
-    SELECT 
-        'Global Baseline' AS Region,
-        AVG(danceability) * 100 AS Danceability,
-        AVG(energy) * 100 AS Energy,
-        AVG(valence) * 100 AS Happiness,
-        AVG(acousticness) * 100 AS Acousticness,
-        AVG(speechiness) * 100 AS Speechiness
-    FROM gold_spotify_daily
-    WHERE country = 'Global'
-    """
+    def build_single_region_select(region, alias):
+        # Om båda valen är identiska använd ett alias så Plotly kan separera dom
+        is_duplicate = region1 == region2
+
+        if region == "Global":
+            where_clause = "WHERE s.country = 'Global'"
+            display_name = f"Global ({alias})" if is_duplicate else "Global"
+        else:
+            where_clause = _build_geo_where_clause(region)
+            display_name = f"{region} ({alias})" if is_duplicate else region
+
+        return f"""
+        SELECT 
+            '{display_name}' AS Region,
+            AVG(s.danceability) * 100 AS Danceability,
+            AVG(s.energy) * 100 AS Energy,
+            AVG(s.valence) * 100 AS Happiness,
+            AVG(s.acousticness) * 100 AS Acousticness,
+            AVG(s.speechiness) * 100 AS Speechiness
+        FROM gold_spotify_daily s
+        LEFT JOIN dim_geography g ON s.country = g.iso_code
+        {where_clause}
+        """
+
+    query1 = build_single_region_select(region1, "Reg 1")
+    query2 = build_single_region_select(region2, "Reg 2")
+
+    # Returnerar users två valda regionerna
+    return f"{query1} \n UNION ALL \n {query2}"
 
 
 # ================================================================

@@ -160,27 +160,30 @@ def render_anatomy_section(continent_list):
 def render_audio_signature_section(continent_list):
     st.header("The Cultural Audio Signature")
     st.markdown(
-        "Discover the musical DNA of different regions. How does the local taste compare to the global baseline?"
+        "Compare the musical 'DNA' of two regions. Select 'Global' to see how a region measures up against the world average."
     )
 
-    selected_signature = st.selectbox(
-        "Select region to view Audio DNA:",
-        options=continent_list,
-        key="signature_continent",
-    )
+    col1, col2 = st.columns(2)
 
-    df_signature = fetch_data(get_audio_signature_query(selected_signature))
+    with col1:
+        region1 = st.selectbox(
+            "Select Region 1:", options=continent_list, key="sig_reg_1"
+        )
+    with col2:
+        region2 = st.selectbox(
+            "Select Region 2:", options=continent_list, key="sig_reg_2"
+        )
+
+    df_signature = fetch_data(get_audio_signature_query(region1, region2))
 
     if not df_signature.empty:
-        col_text, col_chart = st.columns([1, 2])
+        col_text, col_chart = st.columns([1, 2.5])
 
         with col_text:
-            st.write(f"**Analyzing:** {selected_signature}")
+            st.write(f"**Comparing:**\n1. {region1}\n2. {region2}")
+            st.write("Hover over the edges to see the exact scores.")
             st.write(
-                "This radar chart maps the average traits of top tracks in this region."
-            )
-            st.write(
-                "Notice how the green shape stretches outward in areas where this region over-indexes compared to the grey global baseline."
+                "Pro tip: Set one of the regions to 'Global' to establish a baseline!"
             )
 
         with col_chart:
