@@ -5,7 +5,7 @@ import duckdb
 import pandas as pd
 
 from components.data_loader import fetch_data
-from components.queries.queries_sales import get_all_media_sales
+from components.queries.queries_sales import get_all_media_sales, get_format_lifespan_query
 
 
 df = fetch_data(get_all_media_sales())
@@ -150,3 +150,31 @@ def total_units_revenue_bar_chart(formats, years, metrics, labels):
     with st.container(border=True):
         st.plotly_chart(fig, use_container_width=True)
 
+def format_lifespan_chart():
+    dff = duckdb.sql(get_format_lifespan_query()).df()
+
+    fig = px.bar(
+        dff,
+        x='lifespan',
+        y='format',
+        base='first_year',
+        color='format',
+        orientation='h',
+        title='Format Lifespan',
+        labels={'lifespan': 'Years active', 'format': 'Format'}
+    )
+
+    fig.update_layout(showlegend=False)
+
+    with st.container(border=True):
+        st.plotly_chart(fig, use_container_width=True)
+
+def format_lifespan_table():
+    dff = duckdb.sql(get_format_lifespan_query()).df()
+    st.dataframe(dff, column_config={
+        'first_year': 'First Year',
+        'last_year': 'Last Year',
+        'lifespan': 'Lifespan (years)',
+        'peak_year': 'Peak Year',
+        'peak_value': 'Peak Revenue'
+    })

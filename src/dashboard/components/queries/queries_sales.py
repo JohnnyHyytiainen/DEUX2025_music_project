@@ -42,3 +42,20 @@ def get_all_media_sales() -> str:
            END AS format
         FROM silver_music_format_sales
            """
+
+def get_format_lifespan_query():
+    return """
+    SELECT
+        format,
+        MIN(year) as first_year,
+        MAX(year) as last_year,
+        MAX(year) - MIN(year) as lifespan,
+        FIRST(year ORDER BY value DESC) as peak_year,
+        MAX(value) as peak_value
+    FROM df
+    WHERE metric = 'Units'
+    AND format IN ('CD', '8-Track', 'Vinyl', 'Cassette', 'Download', 'Streaming')
+    AND value > 0
+    GROUP BY format
+    ORDER BY first_year ASC
+    """

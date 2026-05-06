@@ -1,7 +1,15 @@
 from operator import concat
 
 import streamlit as st
-from components.charts.charts_sales import peak_table, format_over_time_line_chart, total_sales_kpi, total_units_revenue_bar_chart, dominate_format_kpi
+from components.charts.charts_sales import (
+    peak_table,
+    format_over_time_line_chart,
+    total_sales_kpi,
+    total_units_revenue_bar_chart,
+    dominate_format_kpi,
+    format_lifespan_table,
+    format_lifespan_chart
+    )
 from components.filter.filters_sales import metrics_filter, year_filter, format_filter
 
 
@@ -44,8 +52,5 @@ with cols[1]:
     for m, label in zip(metrics, labels):
         total_sales_kpi(m, formats, years, label)
 
-
-
-
-
-
+format_lifespan_table()
+format_lifespan_chart()
