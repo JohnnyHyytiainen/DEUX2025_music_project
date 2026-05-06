@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#B33A38"
+backgroundColor = "#EEE6DA"
+secondaryBackgroundColor = "#D0CBC3"
+textColor = "#14181A"
+font = "Urbanist:https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
