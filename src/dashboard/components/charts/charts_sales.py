@@ -31,14 +31,33 @@ def format_over_time_line_chart(metric, formats, years):
     dff = df.query("metric == @metric and format in @formats and year >= @years[0] and year <= @years[1]")
     dff = dff.groupby(['year', 'format'])['value'].sum().reset_index()
 
+    #sources:
+    #RIAA(Recording Industry Association of America) — riaa.com
+    #BPI(British Phonographic Industry) — bpi.co.uk
+    #Billboard — billboard.com
+    #Rolling Stone — rollingstone.com
+    #Spotify Newsroom — newsroom.spotify.com
+
     fun_facts = {
-        1999: 'CD reached its all-time peak with 940 million units sold!',
-        2001: 'Napster shutdown accelerated digital music shift',
-        2008: 'Streaming starts taking over physical media',
+        1973: 'The 8-Track format peaks — over 40 million players sold in the US alone',
+        1977: 'Vinyl hits its golden era — Saturday Night Fever becomes one of the best-selling albums ever',
+        1983: 'The CD is commercially launched — Dire Straits Brothers in Arms becomes first CD to sell 1 million copies',
+        1988: 'Cassette outsells vinyl for the first time in history',
+        1991: 'CD overtakes cassette in sales for the first time',
+        1999: 'CD peaks — over 940 million units sold globally',
+        2000: 'Napster reaches 80 million users before shutdown in 2001',
+        2003: 'iTunes Store launches — 1 million songs sold in first week',
+        2008: 'Streaming starts taking over physical media — Spotify launches in Europe',
+        2012: 'Vinyl makes a comeback — sales up 745% since 2007',
+        2015: 'Streaming revenue surpasses digital download revenue for the first time',
+        2019: 'Streaming accounts for 80% of all music industry revenue',
     }
 
     dff['fun_fact'] = dff['year'].map(fun_facts).fillna('')
     dff['year'] = dff['year'].astype(str)
+
+    # Filter for facts
+    filtered_fun_facts = {year: fact for year, fact in fun_facts.items() if years[0] <= year <= years[1]}
 
     with st.container(border=True):
         st.markdown("Format over years")
@@ -49,7 +68,8 @@ def format_over_time_line_chart(metric, formats, years):
             hovertemplate="<b>%{x}</b><br>Value: %{y}<br>%{customdata[0]}<extra></extra>"
         )
 
-        for year in fun_facts.keys():
+        # Plotting fun facts on graph
+        for year in filtered_fun_facts.keys():
             fig.add_shape(
                 type="line",
                 x0=str(year),
@@ -57,16 +77,17 @@ def format_over_time_line_chart(metric, formats, years):
                 y0=0,
                 y1=1,
                 yref="paper",
-                line=dict(dash="dot", color="grey", width=1),
-                opacity=0.5,
+                line=dict(dash="dot", color="white", width=2),
+                opacity=0.6,
             )
-            fig.add_annotation(
-                x=str(year),
-                y=1,
-                yref="paper",
-                text="ℹ️",
-                showarrow=False,
+
+        #Makes the tooltip window bigger
+        fig.update_layout(
+            hoverlabel=dict(
+                font_size=16,
+                namelength=-1
             )
+        )
 
         fig.update_xaxes(tickangle=45)
         st.plotly_chart(fig, use_container_width=True)

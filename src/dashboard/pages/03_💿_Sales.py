@@ -1,3 +1,5 @@
+from operator import concat
+
 import streamlit as st
 from components.charts.charts_sales import peak_table, format_over_time_line_chart, total_sales_kpi, total_units_revenue_bar_chart
 from components.filter.filters_sales import metrics_filter, year_filter, format_filter
@@ -9,6 +11,8 @@ st.set_page_config(page_title="Sales format over time",page_icon="💿", layout=
 st.title("Music consumption: From Vinyl to Streaming")
 
 st.title("Linechart of total sales per year")
+
+st.markdown("""**Hover on the lines to see fun facts**""")
 
 def create_row_space(spaces=10):
     for _ in range(spaces):
@@ -26,14 +30,22 @@ with cols[1]:
 
 metrics = ["Units", "Value"]
 labels = ["Total sales in units", "Total revenue in USD"]
+selected_formats = ["CD", "Cassette"]
 
 st.title("Barchart for revenue and units sold over time")
-cols = st.columns([75, 25], vertical_alignment='center')
+cols = st.columns(2, vertical_alignment='center')
 with cols[0]:
     total_units_revenue_bar_chart(formats, years, metrics, labels)
 with cols[1]:
     for m, label in zip(metrics, labels):
         total_sales_kpi(m, formats, years, label)
+
+    for m, label in zip(metrics, labels):
+        cols2 = st.columns(len(selected_formats))
+        for i, selected_format in enumerate(selected_formats):
+            with cols2[i]:
+                total_sales_kpi(m, [selected_format], years, f"{label} - {selected_format}")
+
 
 
 
