@@ -42,7 +42,7 @@ def top_songs_profile_list(
         st.subheader("Top 10 best matched")
         if not df_top_songs_profile.empty:
             df_top_songs_profile.index = df_top_songs_profile.index + 1
-            st.dataframe(df_top_songs_profile, use_container_width=True, column_config={"Popularity": None})
+            st.dataframe(df_top_songs_profile, use_container_width=True, column_config={"Popularity": None, "Artist": None})
         else:
             st.info("No songs found matching this exact profile. Try loosening the filters!")
     
@@ -58,7 +58,7 @@ def top_country_profile_chart(
         loudness_max=0,
         explicit="NO",
         mode="Major",
-        limit=5):
+        limit=10):
     speechiness = speechiness_max/100
     danceability = danceability_max/100
     liveness = liveness_max/100
