@@ -37,7 +37,7 @@ metrics = ["Value", "Units"]
 labels = ["Total revenue in USD", "Total sales in units"]
 
 st.title("Barchart for revenue and units sold over time")
-cols = st.columns([70,30], vertical_alignment='center')
+cols = st.columns([70,30])
 with cols[0]:
     total_units_revenue_bar_chart(formats, years, metrics, labels)
 with cols[1]:
