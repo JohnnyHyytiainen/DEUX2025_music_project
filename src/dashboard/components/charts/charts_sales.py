@@ -106,6 +106,24 @@ def total_sales_kpi(metric, formats, years, label):
 
     st.metric(label=label, value=f"{total_sales['total_sales']:,.0f} Million",border=True)
 
+def dominate_format_kpi(metric, formats, years):
+    format_list = "', '".join(formats)
+    dominant = duckdb.sql(f"""--sql
+        SELECT
+            format,
+            SUM(value) as total_sales
+        FROM df
+        WHERE metric = '{metric}'
+        AND year >= {years[0]}
+        AND year <= {years[1]}
+        AND format IN ('{format_list}')
+        GROUP BY format
+        ORDER BY total_sales DESC
+        LIMIT 1
+        """).df().iloc[0]
+
+    st.metric(label="Dominate format", value=dominant['format'], border=True)
+
 def total_units_revenue_bar_chart(formats, years, metrics, labels):
     dfs = []
     for m, label in zip(metrics, labels):

@@ -9,7 +9,12 @@ def metrics_filter():
 
 def format_filter():
     options = df['format'].unique().tolist()
-    return st.multiselect(label='Select formats', options=options, default=options)
+    return st.pills(
+        label='Select formats',
+        options=options,
+        default=options,
+        selection_mode='multi'
+    )
 
 def year_filter():
     return st.slider(
