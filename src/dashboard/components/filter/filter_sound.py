@@ -56,7 +56,7 @@ def fifty_slider(name:str):
 
 def explicit_chooser():
     return st.segmented_control(
-        label="Explicit",
+        label="Uncensorded",
         options=["NO", "YES"],
         selection_mode="single",
         default="NO",

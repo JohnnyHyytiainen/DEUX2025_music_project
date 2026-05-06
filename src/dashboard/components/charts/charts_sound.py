@@ -23,7 +23,8 @@ def top_songs_profile_list(
         SELECT
             name AS Song,
             artists AS Artist,
-            SUM(popularity) AS Popularity
+            SUM(popularity) AS Popularity,
+            spotify_id AS Spotify_ID
         FROM silver_spotify_daily
         WHERE
             speechiness < {speechiness} AND
@@ -34,7 +35,7 @@ def top_songs_profile_list(
             loudness < {loudness_max} AND
             is_explicit = {expl_var} AND
             "mode" = {mode_var}             
-        GROUP BY name, artists
+        GROUP BY name, artists, spotify_id
         ORDER BY Popularity DESC
         LIMIT {limit};
     """)
@@ -42,7 +43,7 @@ def top_songs_profile_list(
         st.subheader("Top 10 best matched")
         if not df_top_songs_profile.empty:
             df_top_songs_profile.index = df_top_songs_profile.index + 1
-            st.dataframe(df_top_songs_profile, use_container_width=True, column_config={"Popularity": None, "Artist": None})
+            st.dataframe(df_top_songs_profile, use_container_width=True, column_config={"Popularity": None, "Artist": None, "Spotify_ID": None})
         else:
             st.info("No songs found matching this exact profile. Try loosening the filters!")
     
