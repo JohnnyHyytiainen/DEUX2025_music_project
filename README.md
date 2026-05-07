@@ -10,6 +10,8 @@ This project is an agile collaboration between Data Engineering (DE25) and UX De
 
 Our DE team has architected a robust Data Lakehouse solution. We transform millions of rows of raw music data into a highly structured, lightning-fast analytical environment, powering interactive PowerBI and Streamlit dashboards.
 
+[Streamlit Dashboard](https://rewind-project.streamlit.app/)
+
 ## Architecture & Tech Stack
 
 To bypass platform storage limits and achieve maximum performance in our cloud deployment, we developed a decoupled storage/compute architecture:
