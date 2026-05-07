@@ -21,7 +21,7 @@ datavis-project/
 │
 ├── serving/                # Frontend-lagret
 │   ├── streamlit_app/      # Streamlit applikationen
-│   │   └── app.py
+│   │   └── Rewind.py
 │   └── storytelling/       # Data storytellinggrafer i matplotlib
 │
 ├── docs/                   # Docs för ex, module_overviews, session tracking, todo etc.
