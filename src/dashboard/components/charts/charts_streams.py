@@ -32,7 +32,7 @@ def streams_over_time_line_chart(selected_cont, selected_countries, start_date, 
 
     # Adjust the title of the chart
     fig.update_layout(
-        title=dict(text="Total number of streams over time", font=dict(size=26), automargin=True, yref='paper', x=0.02),
+        title=dict(text="Total number of streams over time", font=dict(size=26), automargin=True, yref='paper'),
     )
     fig.update_yaxes(
         showgrid=True,

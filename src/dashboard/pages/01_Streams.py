@@ -1,6 +1,8 @@
 import streamlit as st
 from components.data_loader import fetch_data
-from components.queries.queries_global import get_continent_list_query
+from utils.constants import MARKDOWN_PATH, STYLE_PATH
+from utils.helpers import read_textfile, read_css
+from components.queries.queries_geek_out import get_continent_list_query
 from components.queries.queries_streams import get_countries_list_query, get_date_list_query, table_query
 from components.filter.filters_streams import continent_filter, country_filter, date_filter, reset_filters_streams,format_streams_table
 from components.charts.charts_streams import streams_over_time_line_chart
@@ -19,8 +21,10 @@ st.markdown("""
 #     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 
+st.markdown(read_textfile(MARKDOWN_PATH / "streams_title.md"))
+
 # create column for reset button
-r_col1, r_col2 = st.columns([18, 1])
+r_col1, r_col2 = st.columns([13, 1])
 
 # collect data for continents and dates
 df_cont = fetch_data(get_continent_list_query())
@@ -65,3 +69,4 @@ with col1:
 # add line chart
 st.plotly_chart(streams_over_time_line_chart(selected_cont, selected_countries, start_date, end_date))
 
+read_css(STYLE_PATH / "style.css")
