@@ -6,53 +6,44 @@ from components.filter.filter_sound import procent_slider, vertical_procent_slid
 
 st.set_page_config(page_title="Sounds", page_icon="🎶", layout="wide")
 
-best_match = st.container()
+# AREA 1 - TITLE
+# ToDo - Add a Title
 
-st.write("---")
+# AREA 2 - MIDDLE
 
-col_table, col_controls, col_chart = st.columns([3, 3, 3])
+# 10 TOP SONGS + FILTERS & BEST MATCH 
+area2_col1, area2_col2 = st.columns([30, 70])
 
-
-with col_controls:
+with area2_col2:
+    # BEST MATCH + SPOTIFY LINK (PLACEHOLDERS)
+    area2_col2_row1_obj1, area2_col2_row1_obj2 = st.columns([60, 20])
     st.subheader("Filter by audio features",text_alignment="center")
-    row1_col1, row1_col2, row1_col3 = st.columns(3,width=300)
-    with row1_col1:
+
+    #SLIDERS
+    area2_col2_row2_start, area2_col2_row2_obj1, area2_col2_row2_obj2, area2_col2_row2_obj3, area2_col2_row2_obj4, area2_col2_row2_obj5, area2_col2_row2_obj6, area2_col2_row2_end = st.columns([1, 2, 2, 2, 2, 2, 2, 1])
+    with area2_col2_row2_obj1:
         tempo_slider = vertical_bpm_slider(name="Tempo (BPM)")
-    with row1_col2:
+    with area2_col2_row2_obj2:
         loudness_slider = vertical_loudness_slider(name="Loudness (dBFS)")
-    with row1_col3:
+    with area2_col2_row2_obj3:
         liveness_slider = vertical_procent_slider(name="Liveness %")
-    
-    st.write("")
-    row2_col1, row2_col2, row2_col3 = st.columns(3,width=300)
-    with row2_col1:
+    with area2_col2_row2_obj4:
         danceability_slider = vertical_procent_slider(name="Danceability %")
-    with row2_col2:
+    with area2_col2_row2_obj5:
         happiness_slider = vertical_procent_slider(name="Happiness %")
-    with row2_col3:
+    with area2_col2_row2_obj6:
         speechiness_slider = vertical_procent_slider(name="Speechiness %")
-    
-    st.write("")
-    row3_col1, row3_col2 = st.columns(2)
-    with row3_col1:
+
+    # SWITCHES
+    area2_col2_row3_start, area2_col2_row3_obj1, area2_col2_row3_obj2, area2_col2_row3_end = st.columns([1, 2, 2, 1])
+    with area2_col2_row3_obj1:
         is_explicit = explicit_chooser()
-    with row3_col2:
+    with area2_col2_row3_obj2:
         is_mode = mode_chooser()
 
-    
-with col_chart:
-    top_country_profile_chart(
-        tempo_max=tempo_slider,
-        loudness_max=loudness_slider,
-        liveness_max=liveness_slider,
-        danceability_max=danceability_slider,
-        happiness_max=happiness_slider,
-        speechiness_max=speechiness_slider,
-        explicit=is_explicit,
-        mode=is_mode
-    )
 
-with col_table:
+# 10 TOP SONGS
+with area2_col1:
     df_returned = top_songs_profile_list(
         tempo_max=tempo_slider,
         loudness_max=loudness_slider,
@@ -64,10 +55,26 @@ with col_table:
         mode=is_mode
     )
 
-with best_match:
+# BEST MATCH
+with area2_col2_row1_obj1:
     if df_returned is not None and not df_returned.empty:
         best_song = df_returned.iloc[0]["Song"]
         best_artist = df_returned.iloc[0]["Artist"]
         st.subheader("Best match")
         with st.container(border=True):
             st.metric(label=best_artist, value=best_song)
+
+# AREA 3 - CHART
+area3_col1 = st.container()
+
+with area3_col1:
+    top_country_profile_chart(
+        tempo_max=tempo_slider,
+        loudness_max=loudness_slider,
+        liveness_max=liveness_slider,
+        danceability_max=danceability_slider,
+        happiness_max=happiness_slider,
+        speechiness_max=speechiness_slider,
+        explicit=is_explicit,
+        mode=is_mode
+    )

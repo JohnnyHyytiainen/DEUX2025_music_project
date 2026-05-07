@@ -1,87 +1,116 @@
 import plotly.express as px
 import pandas as pd
 
+from utils.constants import (
+    SCALE_MOOD,
+    SCALE_TEMPO,
+    SCALE_ACOUSTIC,
+    SCALE_EXPLICIT,
+    SCALE_SCATTER,
+    COLOR_RADAR,
+    COLOR_LINES,
+    BG_TRANSPARENT,
+    BG_PLOT_DARK,
+)
 
-# ===========================================
-# BASE CHART BUILDER PRIV FUNKTION DONT TOUCH
-# ===========================================
-def _create_base_hbar_chart(
-    df, x_col: str, x_label: str, color: str, is_ascending: bool
-):
-    """Base function to generate horizontal bar-charts with consistent styling"""
-    order = "total ascending" if is_ascending else "total descending"
+
+# ==============================================================
+# SPEKTRUM-GRAFER FÖR MOOD OCH TEMPO (MAKRO-PERSPEKTIV)
+# ==============================================================
+def create_mood_spectrum_chart(df):
+    """Creates a single macro-level bar chart for Happiness with a color gradient."""
+    # Sortera så att det gladaste landet hamnar högst upp i grafen
+    df_sorted = df.sort_values(by="happiness_score", ascending=True)
 
     fig = px.bar(
-        df,
-        x=x_col,
+        df_sorted,
+        x="happiness_score",
         y="country",
         orientation="h",
-        color_discrete_sequence=[color],
-        labels={"country": "", x_col: x_label},
+        color="happiness_score",
+        color_continuous_scale=SCALE_MOOD,
+        labels={"country": "", "happiness_score": "Happiness Index (0-100)"},
     )
-    fig.update_layout(yaxis={"categoryorder": order})
+
+    fig.update_layout(
+        coloraxis_showscale=False,
+        xaxis=dict(range=[0, 100]),  # TVINGA axeln till 0-100 enligt UX-krav
+        plot_bgcolor=BG_PLOT_DARK,
+        paper_bgcolor=BG_TRANSPARENT,
+        margin=dict(l=0, r=0, t=10, b=0),  # Minskar onödiga marginaler
+    )
     return fig
 
 
-# ---------- SPECIFIKA CHARTS MED BASE CHART BUILDER ----------
-# Mood H bar-chart
-def create_mood_bar_chart(df, is_happy=True):
-    """Creates horizontal bar chart for happy and melancholic music."""
-    color = "#CBC835" if is_happy else "#1A1A95"
-    return _create_base_hbar_chart(
-        df=df,
-        x_col="happiness_score",
-        x_label="Happiness Index (0-100)",
-        color=color,
-        is_ascending=is_happy,
-    )
+def create_tempo_spectrum_chart(df):
+    """Creates a single macro-level bar chart for Tempo with a color gradient."""
+    df_sorted = df.sort_values(by="avg_bpm", ascending=True)
 
-
-# ---------- SPECIFIKA CHARTS MED BASE CHART BUILDER ----------
-# Tempo H bar-chart vid sidan av mood chart
-def create_tempo_bar_chart(df, is_fast=True):
-    """Creates a H-bar chart for fast/slow tempo music."""
-    color = "#CBC835" if is_fast else "#1A1A95"
-    return _create_base_hbar_chart(
-        df=df,
-        x_col="avg_bpm",
-        x_label="Average Tempo (BPM)",
-        color=color,
-        is_ascending=is_fast,
-    )
-
-
-# ---------- SPECIFIKA CHARTS MED BASE CHART BUILDER ----------
-# Akustisk/producerad H bar-chart
-# Grön "jordig ton" = akustisk musik.
-# Lila "intensiv/artificiell ton" = producerad/elektronisk musik.
-def create_acoustic_bar_chart(df, is_acoustic=True):
-    """Creates a horizontal barchart over the most aucustic Nations"""
-    color = "#2E8B57" if is_acoustic else "#8A2BE2"
-    return _create_base_hbar_chart(
-        df=df,
-        x_col="avg_acousticness",
-        x_label="Acousticness Index (0-100)",
-        color=color,
-        is_ascending=is_acoustic,
-    )
-
-
-# ===============================================================
-# Skapar barchart för explicit musik och dess andel(%) för länder
-# ===============================================================
-def create_explicit_bar_chart(df):
-    """Creates bar chart for share of explicit music by country"""
     fig = px.bar(
-        df,
-        x="country",
-        y="Explicit_Procent",
-        color="Explicit_Procent",
-        color_continuous_scale="Purples",
-        labels={"country": "Land", "Explicit_Procent": "Explicit Musik (%)"},
-        title="Explicit Musik (%)",
+        df_sorted,
+        x="avg_bpm",
+        y="country",
+        orientation="h",
+        color="avg_bpm",
+        color_continuous_scale=SCALE_TEMPO,
+        labels={"country": "", "avg_bpm": "Average Tempo (BPM)"},
     )
-    fig.update_layout(coloraxis_showscale=False)
+
+    fig.update_layout(
+        coloraxis_showscale=False,
+        xaxis=dict(range=[60, 160]),
+        plot_bgcolor=BG_PLOT_DARK,
+        paper_bgcolor=BG_TRANSPARENT,
+        margin=dict(l=0, r=0, t=10, b=0),
+    )
+    return fig
+
+
+def create_acoustic_spectrum_chart(df):
+    """Creates a macro-level bar chart for Acousticness vs Electronic."""
+    df_sorted = df.sort_values(by="avg_acousticness", ascending=True)
+
+    fig = px.bar(
+        df_sorted,
+        x="avg_acousticness",
+        y="country",
+        orientation="h",
+        color="avg_acousticness",
+        color_continuous_scale=SCALE_ACOUSTIC,
+        labels={"country": "", "avg_acousticness": "Acousticness Index (0-100)"},
+    )
+
+    fig.update_layout(
+        coloraxis_showscale=False,
+        xaxis=dict(range=[0, 100]),
+        plot_bgcolor=BG_PLOT_DARK,
+        paper_bgcolor=BG_TRANSPARENT,
+        margin=dict(l=0, r=0, t=10, b=0),
+    )
+    return fig
+
+
+def create_explicit_spectrum_chart(df):
+    """Creates a macro-level bar chart for share of Explicit music."""
+    df_sorted = df.sort_values(by="Explicit_Procent", ascending=True)
+
+    fig = px.bar(
+        df_sorted,
+        x="Explicit_Procent",
+        y="country",
+        orientation="h",
+        color="Explicit_Procent",
+        color_continuous_scale=SCALE_EXPLICIT,
+        labels={"country": "", "Explicit_Procent": "Explicit Music (%)"},
+    )
+
+    fig.update_layout(
+        coloraxis_showscale=False,
+        xaxis=dict(range=[0, 100]),
+        plot_bgcolor=BG_PLOT_DARK,
+        paper_bgcolor=BG_TRANSPARENT,
+        margin=dict(l=0, r=0, t=10, b=0),
+    )
     return fig
 
 
@@ -97,18 +126,39 @@ def create_dancefloor_scatter(df):
         hover_name="Song",
         hover_data=["Artist"],
         color="Energy",
-        color_continuous_scale="Plasma",
+        color_continuous_scale=SCALE_SCATTER,
         labels={
             "Danceability": "Danceability Index (0-100)",
             "Energy": "Energy Index (0-100)",
         },
         title="The Global Dancefloor: Energy vs. Danceability",
     )
-    fig.update_layout(coloraxis_showscale=False)
+    fig.update_layout(
+        coloraxis_showscale=False,
+        plot_bgcolor=BG_PLOT_DARK,
+        paper_bgcolor=BG_TRANSPARENT,
+    )
     # Lägg till ett kors i mitten som referens (index 50)
-    fig.add_vline(x=50, line_dash="dash", line_color="#8D8D8D", opacity=0.55)
-    fig.add_hline(y=50, line_dash="dash", line_color="#8D8D8D", opacity=0.55)
+    fig.add_vline(x=50, line_dash="dash", line_color=COLOR_LINES, opacity=0.60)
+    fig.add_hline(y=50, line_dash="dash", line_color=COLOR_LINES, opacity=0.60)
 
+    # --- UX COPY, TEXT I FYRA HÖRNEN ---
+    fig.add_annotation(
+        x=5, y=95, text="High Energy<br>Low Danceability", showarrow=False, opacity=0.8
+    )
+    fig.add_annotation(
+        x=95,
+        y=95,
+        text="High Energy<br>High Danceability",
+        showarrow=False,
+        opacity=0.8,
+    )
+    fig.add_annotation(
+        x=5, y=5, text="Low Energy<br>Low Danceability", showarrow=False, opacity=0.8
+    )
+    fig.add_annotation(
+        x=95, y=5, text="Low Energy<br>High Danceability", showarrow=False, opacity=0.8
+    )
     # Tvinga axlarna att visa hela spannet så man ser tomrummen
     fig.update_xaxes(range=[0, 100])
     fig.update_yaxes(range=[0, 100])
@@ -121,16 +171,10 @@ def create_dancefloor_scatter(df):
 def create_audio_signature_radar(df):
     """Creates a Radar chart comparing the audio DNA of two selected regions."""
     features = ["Danceability", "Energy", "Happiness", "Acousticness", "Speechiness"]
-
-    # Smält datan från wide till long format
     df_melted = df.melt(
         id_vars=["Region"], value_vars=features, var_name="Feature", value_name="Score"
     )
-
     df_melted["Score"] = df_melted["Score"].round(1)
-
-    # Spotify-grön och en snygg lila färg
-    colors = ["#1DB954", "#8A2BE2"]
 
     fig = px.line_polar(
         df_melted,
@@ -138,12 +182,11 @@ def create_audio_signature_radar(df):
         theta="Feature",
         color="Region",
         line_close=True,
-        color_discrete_sequence=colors,
-        hover_name="Region",  # Sätter regionens namn i toppen av rutan jag hovrar över
+        color_discrete_sequence=COLOR_RADAR,
+        hover_name="Region",
         markers=True,
     )
-    # %{theta} hämtar Feature (typ Energy) och %{r} hämtar Score.
-    # <extra></extra> tar bort den extra fula rutan bredvid
+
     fig.update_traces(
         fill="toself",
         opacity=0.5,
@@ -153,20 +196,20 @@ def create_audio_signature_radar(df):
 
     fig.update_layout(
         polar=dict(
-            bgcolor="rgba(0,0,0,0)",
+            bgcolor=BG_PLOT_DARK,
             radialaxis=dict(
                 visible=True,
-                showticklabels=False,  # Gömmer statiska siffror, behöver ej det då jag kör hover over
+                showticklabels=False,
                 showgrid=True,
-                gridcolor="rgba(255,255,255,0.1)",
-                linecolor="rgba(255,255,255,0.1)",
+                gridcolor="rgba(0,0,0,0.03)",
+                linecolor="rgba(0,0,0,0.03)",
             ),
             angularaxis=dict(
-                gridcolor="rgba(255,255,255,0.1)", linecolor="rgba(255,255,255,0.1)"
+                gridcolor="rgba(0,0,0,0.03)", linecolor="rgba(0,0,0,0.03)"
             ),
         ),
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor=BG_TRANSPARENT,
+        plot_bgcolor=BG_TRANSPARENT,
         showlegend=True,
         title="Audio Signature (DNA)",
         hovermode="closest",
