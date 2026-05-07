@@ -1,12 +1,14 @@
 # src/dashboard/pages/01_Global_Trends.py
 import streamlit as st
 from components.data_loader import fetch_data
+from utils.constants import STYLE_PATH
 from utils.helpers import (
     initialize_global_state,
     render_local_controls,
+    read_css,
 )
 
-from components.queries.queries_global import (
+from components.queries.queries_geek_out import (
     get_top_explicit_query,
     get_continent_list_query,
     get_countries_in_continent_query,
@@ -15,7 +17,7 @@ from components.queries.queries_global import (
     get_dancefloor_songs_query,
     get_acoustic_loudness_query,
 )
-from components.charts.charts_global import (
+from components.charts.charts_geek_out import (
     create_explicit_spectrum_chart,
     create_mood_spectrum_chart,
     create_tempo_spectrum_chart,
@@ -160,7 +162,8 @@ def render_anatomy_section(continent_list):
 
     df_dance = fetch_data(get_dancefloor_songs_query(current_cont, is_explicit))
     with tabs[0]:
-        st.markdown("**Does High energy equal danceable music?**")
+        st.header("Does High Energy equal Danceable music?")
+        st.markdown("Each dot represents a song.")
         if not df_dance.empty:
             st.plotly_chart(
                 create_dancefloor_scatter(df_dance), use_container_width=True
@@ -246,6 +249,8 @@ def main():
     render_mood_and_tempo_section(continent_list)
     st.divider()
     render_anatomy_section(continent_list)
+
+    read_css(STYLE_PATH / "style.css")
 
 
 if __name__ == "__main__":
