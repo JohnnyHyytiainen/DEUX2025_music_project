@@ -61,3 +61,22 @@ h3 *,
     font-family: "Material Symbols Rounded", sans-serif !important;
     font-size: 24px !important;
 }
+
+/* -----------------------------------
+   9. STYLA TOPPLISTAN (st.table)
+----------------------------------- */
+/* Svart header med vit text */
+[data-testid="stTable"] th {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    font-family: 'Urbanist', sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    border-bottom: none !important;
+}
+
+/* Styla brödtexten i själva listan */
+[data-testid="stTable"] td {
+    font-family: 'Atkinson Hyperlegible', sans-serif !important;
+    font-size: 14px !important;
+}

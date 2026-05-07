@@ -1,6 +1,7 @@
 import streamlit as st
 from components.data_loader import fetch_data
-import base64
+from assets.style.py_style import style_toplist
+
 
 def top_songs_profile_list(
         speechiness_max=80,
@@ -44,11 +45,13 @@ def top_songs_profile_list(
         st.subheader("Top 10 best matched")
         if not df_top_songs_profile.empty:
             df_top_songs_profile.index = df_top_songs_profile.index + 1
-            st.dataframe(df_top_songs_profile, use_container_width=True, column_config={"Popularity": None, "Artist": None, "Spotify_ID": None})
+
+            df_to_show = df_top_songs_profile.drop(columns=["Popularity", "Artist", "Spotify_ID"])
+
+            st.table(df_to_show)
         else:
             st.info("No songs found matching this exact profile. Try loosening the filters!")
-    
-    return df_top_songs_profile
+        return df_top_songs_profile
 
 
 def top_country_profile_chart(
