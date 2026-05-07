@@ -5,27 +5,21 @@ import duckdb
 import pandas as pd
 
 from components.data_loader import fetch_data
-from components.queries.queries_sales import get_all_media_sales
+from components.queries.queries_sales import get_all_media_sales, get_format_lifespan_query
 
 
 df = fetch_data(get_all_media_sales())
 
+color_map = {
+    'CD': '#85817B',
+    'Cassette': '#CE917A',
+    'Vinyl': '#C25A4F',
+    '8-Track': '#784E50',
+    'Download': '#77989C',
+    'Streaming': '#DAB576',
+    'Radio': '#B33A38'
+}
 
-#TODO: Change to lifetime span of different formats
-df_peak_year = duckdb.sql("""--sql
-    SELECT DISTINCT ON (format, metric)
-        format,
-        metric,
-        year,
-        value as peak_value
-    FROM df
-    ORDER BY format, metric, peak_value DESC
-                                   """).df()
-
-def peak_table(number_format = 10):
-    with st.container(border=True):
-        st.markdown("Top peak year by format")
-        st.table(df_peak_year.head(number_format))
 
 def format_over_time_line_chart(metric, formats, years):
     dff = df.query("metric == @metric and format in @formats and year >= @years[0] and year <= @years[1]")
@@ -40,7 +34,9 @@ def format_over_time_line_chart(metric, formats, years):
 
     fun_facts = {
         1973: 'The 8-Track format peaks — over 40 million players sold in the US alone',
+        1976: 'Cassette sales overtake 8-Track for the first time — the format never recovers',
         1977: 'Vinyl hits its golden era — Saturday Night Fever becomes one of the best-selling albums ever',
+        1980: '8-Track is officially dead — no major label releases new titles on the format',
         1983: 'The CD is commercially launched — Dire Straits Brothers in Arms becomes first CD to sell 1 million copies',
         1988: 'Cassette outsells vinyl for the first time in history',
         1991: 'CD overtakes cassette in sales for the first time',
@@ -62,7 +58,7 @@ def format_over_time_line_chart(metric, formats, years):
     with st.container(border=True):
         st.markdown("Format over years")
 
-        fig = px.line(dff, x='year', y='value', color='format', custom_data=['fun_fact'])
+        fig = px.line(dff, x='year', y='value', color='format',color_discrete_map=color_map, custom_data=['fun_fact'])
 
         fig.update_traces(
             hovertemplate="<b>%{x}</b><br>Value: %{y}<br>%{customdata[0]}<extra></extra>"
@@ -77,8 +73,8 @@ def format_over_time_line_chart(metric, formats, years):
                 y0=0,
                 y1=1,
                 yref="paper",
-                line=dict(dash="dot", color="white", width=2),
-                opacity=0.6,
+                line=dict(dash="dot", color="grey", width=2),
+                opacity=0.8,
             )
 
         #Makes the tooltip window bigger
@@ -136,11 +132,17 @@ def total_units_revenue_bar_chart(formats, years, metrics, labels):
 
     format_order = dff_combined.groupby('format')['value'].sum().sort_values(ascending=False).index.tolist()
 
+    color_map_bar = {
+        'Total revenue in USD': '#DAB576',
+        'Total sales in units': '#B33A38'
+    }
+
     fig = px.bar(
         dff_combined,
         x='value',
         y='format',
         color='metric',
+        color_discrete_map=color_map_bar,
         barmode='group',
         title='Total value USD and Units sold',
         labels={'value': 'Value in USD and units sold', 'format': 'Format'},
@@ -150,3 +152,34 @@ def total_units_revenue_bar_chart(formats, years, metrics, labels):
     with st.container(border=True):
         st.plotly_chart(fig, use_container_width=True)
 
+
+def format_lifespan_chart():
+    dff = duckdb.sql(get_format_lifespan_query()).df()
+
+    fig = px.bar(
+        dff,
+        x='lifespan',
+        y='format',
+        base='first_year',
+        color='format',
+        color_discrete_map=color_map,
+        orientation='h',
+        title='Format Lifespan',
+        labels={'lifespan': 'Years active', 'format': 'Format'}
+    )
+
+    fig.update_layout(showlegend=False)
+
+    with st.container(border=True):
+        st.plotly_chart(fig, use_container_width=True)
+
+def format_lifespan_table():
+    dff = duckdb.sql(get_format_lifespan_query()).df()
+    st.dataframe(dff, column_config={
+        'format': 'Format',
+        'first_year': 'First Year',
+        'last_year': 'Last Year',
+        'lifespan': 'Lifespan (years)',
+        'peak_year': 'Peak Year',
+        'peak_value': 'Peak Revenue'
+    })
