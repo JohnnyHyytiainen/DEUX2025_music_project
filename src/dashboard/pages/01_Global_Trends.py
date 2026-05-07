@@ -56,13 +56,28 @@ def render_audio_signature_section(continent_list):
     df_signature = fetch_data(get_country_audio_signature_query(c1, c2, is_explicit))
 
     if not df_signature.empty:
-        col_text, col_chart = st.columns([1, 2.5])
-        with col_text:
-            st.write(f"**Comparing:**\n1. {c1}\n2. {c2}")
-            st.write("Hover over the edges to see the exact scores.")
+        col_chart, col_text = st.columns([4, 1])
         with col_chart:
             st.plotly_chart(
                 create_audio_signature_radar(df_signature), use_container_width=True
+            )
+
+        with col_text:
+            st.write("**Comparing:**")
+
+            # <span> färgar bara rutan, Texten efteråt får automatiskt vår dashboards vanliga textfärg och storlek
+            st.markdown(
+                f"<span style='color:#1DB954; font-size: 20px;'>■</span> 1. {c1}",
+                unsafe_allow_html=True,
+            )
+            st.markdown(
+                f"<span style='color:#8A2BE2; font-size: 20px;'>■</span> 2. {c2}",
+                unsafe_allow_html=True,
+            )
+
+            st.write("---")
+            st.info(
+                "Hover over the edges to see the exact scores and identify where these cultures overlap or diverge."
             )
 
 
@@ -163,7 +178,9 @@ def render_anatomy_section(continent_list):
             with col_notes:
                 acoustic_idx = df_acoustic["avg_acousticness"].idxmax()
                 electronic_idx = df_acoustic["avg_acousticness"].idxmin()
-                st.info("**Acoustic vs Electronic (0-100)**")
+                st.info(
+                    "**About Acoustic vs Electronic (0-100)**\n\nA measure indicating the presence of acoustic instruments. High scores mean the region prefers organic, unplugged sounds (acoustic guitar, piano). Low scores indicate a strong preference for heavily synthesized, electronic, or produced beats."
+                )
                 st.metric(
                     "Most Acoustic",
                     df_acoustic.loc[acoustic_idx, "country"],
@@ -188,11 +205,20 @@ def render_anatomy_section(continent_list):
                     )
                 with col_notes_e:
                     most_exp_idx = df_explicit["Explicit_Procent"].idxmax()
-                    st.info("**Explicit Music Share**")
+                    least_exp_idx = df_explicit["Explicit_Procent"].idxmin()
+                    st.info(
+                        "**Explicit Music Share**\n\nThe percentage of top-charting tracks that contain explicit lyrics or content. A higher percentage often reflects a cultural openness or strong preference for unfiltered genres like HipHop or Rap"
+                    )
                     st.metric(
                         "Most Explicit",
                         df_explicit.loc[most_exp_idx, "country"],
                         f"{df_explicit.loc[most_exp_idx, 'Explicit_Procent']:.1f}%",
+                    )
+                    st.metric(
+                        "Least Explicit",
+                        df_explicit.loc[least_exp_idx, "country"],
+                        f"{df_explicit.loc[least_exp_idx, 'Explicit_Procent']:.1f}%",
+                        delta_color="inverse",
                     )
 
 
