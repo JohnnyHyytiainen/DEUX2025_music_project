@@ -28,7 +28,7 @@ with cols[1]:
 
 with chart_placeholder:
     format_over_time_line_chart(metric, formats, years)
-st.caption(""">
+st.caption("""
     Fun fact sources:
     RIAA(Recording Industry Association of America) — riaa.com |
     BPI(British Phonographic Industry) — bpi.co.uk |
