@@ -1,35 +1,40 @@
 import streamlit as st
 from components.data_loader import fetch_data
 from components.queries.queries_global import get_continent_list_query
-from components.queries.queries_historical import get_countries_list_query, get_date_list_query, table_query
+from components.queries.queries_streams import get_countries_list_query, get_date_list_query, table_query
 from components.filter.filters_streams import continent_filter, country_filter, date_filter
 from components.charts.charts_streams import streams_over_time_line_chart
 
 
 
-col1, col2 = st.columns([2, 3])
+col1, col2, col3 = st.columns([5, 1, 8])
 
-# with col1:
-#     df = fetch_data(table_query(selected_cont, selected_country, start_date, end_date))
-#     df.index = df.index + 1
-#     st.dataframe(df)
 
-with col2:
+
+with col3:
+    st.markdown("### Filters")
+
     df_cont = fetch_data(get_continent_list_query())
     continents = ["Alla"] + df_cont["continent"].tolist()
     selected_cont = continent_filter(continents)
-
 
     df_country = fetch_data(get_countries_list_query(selected_cont))
     countries = ["Alla"] + df_country["country"].tolist()
     selected_countries = country_filter(countries)
 
-
-
     df_dates = fetch_data(get_date_list_query())
     dates = df_dates["snapshot_date"].tolist()
     start_date, end_date = date_filter(dates)
 
+with col1:
+    st.markdown("### Top 5 most streamed")
+
+    df = fetch_data(table_query(selected_cont, selected_countries, start_date, end_date))
+    df.index = df.index + 1
+    st.dataframe(df,
+                 column_config={df.columns[0]: st.column_config.Column(width=130),
+                                df.columns[1]: st.column_config.Column(width=140)}
+                 )
 
 
 st.plotly_chart(streams_over_time_line_chart(selected_cont, selected_countries, start_date, end_date))

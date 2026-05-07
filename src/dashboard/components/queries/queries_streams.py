@@ -49,7 +49,7 @@ def table_query(selected_cont, selected_countries, start_date, end_date):
         WHERE {where_sql}
         GROUP BY "Song title", Artists
         ORDER BY streams DESC
-        LIMIT 10
+        LIMIT 5
     """
 
 def line_chart_query(selected_cont, selected_countries, start_date, end_date):
@@ -59,7 +59,7 @@ def line_chart_query(selected_cont, selected_countries, start_date, end_date):
         return f"""
             SELECT
               SUBSTRING(h.snapshot_date, 1, 10) AS Date,
-              SUM(h.streams) AS Streams,
+              SUM(h.streams) AS "Amount of streams",
             FROM silver_historical_charts h
             LEFT JOIN dim_geography d ON h.iso_code = d.iso_code
             WHERE {where_sql}
@@ -70,7 +70,7 @@ def line_chart_query(selected_cont, selected_countries, start_date, end_date):
         return f"""
             SELECT
               SUBSTRING(h.snapshot_date, 1, 10) AS Date,
-              SUM(h.streams) AS Streams,
+              SUM(h.streams) AS "Amount of streams",
               h.country AS Country
             FROM silver_historical_charts h
             LEFT JOIN dim_geography d ON h.iso_code = d.iso_code
