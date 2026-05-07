@@ -1,4 +1,4 @@
-# src/dashboard/pages/01_Global_Trends.py
+# src/dashboard/pages/04_Geek_Out.py
 import streamlit as st
 from components.data_loader import fetch_data
 from utils.constants import STYLE_PATH

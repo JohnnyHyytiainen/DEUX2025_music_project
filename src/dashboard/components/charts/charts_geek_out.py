@@ -21,6 +21,7 @@ def create_mood_spectrum_chart(df):
     """Creates a single macro-level bar chart for Happiness with a color gradient."""
     # Sortera så att det gladaste landet hamnar högst upp i grafen
     df_sorted = df.sort_values(by="happiness_score", ascending=True)
+    df_sorted["happiness_score"] = df_sorted["happiness_score"].round(1)
 
     fig = px.bar(
         df_sorted,
@@ -32,6 +33,7 @@ def create_mood_spectrum_chart(df):
         labels={"country": "", "happiness_score": "Happiness Index (0-100)"},
     )
 
+    fig.update_traces(hovertemplate="<b>%{y}</b><br>Happiness: %{x} %<extra></extra>")
     fig.update_layout(
         coloraxis_showscale=False,
         xaxis=dict(range=[0, 100]),  # TVINGA axeln till 0-100 enligt UX-krav
@@ -45,6 +47,7 @@ def create_mood_spectrum_chart(df):
 def create_tempo_spectrum_chart(df):
     """Creates a single macro-level bar chart for Tempo with a color gradient."""
     df_sorted = df.sort_values(by="avg_bpm", ascending=True)
+    df_sorted["avg_bpm"] = df_sorted["avg_bpm"].round(1)
 
     fig = px.bar(
         df_sorted,
@@ -55,6 +58,8 @@ def create_tempo_spectrum_chart(df):
         color_continuous_scale=SCALE_TEMPO,
         labels={"country": "", "avg_bpm": "Average Tempo (BPM)"},
     )
+
+    fig.update_traces(hovertemplate="<b>%{y}</b><br>Tempo: %{x} BPM<extra></extra>")
 
     fig.update_layout(
         coloraxis_showscale=False,
@@ -69,6 +74,7 @@ def create_tempo_spectrum_chart(df):
 def create_acoustic_spectrum_chart(df):
     """Creates a macro-level bar chart for Acousticness vs Electronic."""
     df_sorted = df.sort_values(by="avg_acousticness", ascending=True)
+    df_sorted["avg_acousticness"] = df_sorted["avg_acousticness"].round(1)
 
     fig = px.bar(
         df_sorted,
@@ -78,6 +84,9 @@ def create_acoustic_spectrum_chart(df):
         color="avg_acousticness",
         color_continuous_scale=SCALE_ACOUSTIC,
         labels={"country": "", "avg_acousticness": "Acousticness Index (0-100)"},
+    )
+    fig.update_traces(
+        hovertemplate="<b>%{y}</b><br>Acousticness: %{x} %<extra></extra>"
     )
 
     fig.update_layout(
@@ -93,6 +102,7 @@ def create_acoustic_spectrum_chart(df):
 def create_explicit_spectrum_chart(df):
     """Creates a macro-level bar chart for share of Explicit music."""
     df_sorted = df.sort_values(by="Explicit_Procent", ascending=True)
+    df_sorted["Explicit_Procent"] = df_sorted["Explicit_Procent"].round(1)
 
     fig = px.bar(
         df_sorted,
@@ -103,6 +113,8 @@ def create_explicit_spectrum_chart(df):
         color_continuous_scale=SCALE_EXPLICIT,
         labels={"country": "", "Explicit_Procent": "Explicit Music (%)"},
     )
+
+    fig.update_traces(hovertemplate="<b>%{y}</b><br>Explicit: %{x}%<extra></extra>")
 
     fig.update_layout(
         coloraxis_showscale=False,
