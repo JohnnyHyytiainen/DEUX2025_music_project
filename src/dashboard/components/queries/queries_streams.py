@@ -77,7 +77,7 @@ def line_chart_query(selected_cont, selected_countries, start_date, end_date):
         return f"""
             SELECT
               SUBSTRING(h.snapshot_date, 1, 10) AS Date,
-              SUM(h.streams) AS "Amount of streams",
+              SUM(h.streams) AS "Amount of streams"
             FROM silver_historical_charts h
             LEFT JOIN dim_geography d ON h.iso_code = d.iso_code
             WHERE {where_sql}

@@ -3,33 +3,55 @@ import streamlit as st
 
 def continent_filter(continents):
     """Create buttons with filters for continents"""
-    # if no filter/continent chosen -> show all continents combined
     if "continent" not in st.session_state:
-        st.session_state.continent = "Alla"
+        st.session_state.continent = "All"
 
     col = st.columns(3)
-    # create button for each continent, put filter on it
+
     with col[2]:
-        if st.button("Europe", width=700):
-            st.session_state.continent = "Europe"
+        if st.session_state.continent == "Europe":
+            st.button("Europe", width=700, type="primary")
+        else:
+            if st.button("Europe", width=700):
+                st.session_state.continent = "Europe"
+                st.rerun()
     with col[0]:
-        if st.button("Asia", width=700):
-            st.session_state.continent = "Asia"
+        if st.session_state.continent == "Asia":
+            st.button("Asia", width=700, type="primary")
+        else:
+            if st.button("Asia", width=700):
+                st.session_state.continent = "Asia"
+                st.rerun()
     with col[1]:
-        if st.button("Africa", width=700):
-            st.session_state.continent = "Africa"
+        if st.session_state.continent == "Africa":
+            st.button("Africa", width=700, type="primary")
+        else:
+            if st.button("Africa", width=700):
+                st.session_state.continent = "Africa"
+                st.rerun()
     with col[2]:
-        if st.button("Oceania", width=700):
-            st.session_state.continent = "Oceania"
+        if st.session_state.continent == "Oceania":
+            st.button("Oceania", width=700, type="primary")
+        else:
+            if st.button("Oceania", width=700):
+                st.session_state.continent = "Oceania"
+                st.rerun()
     with col[0]:
-        if st.button("North America", width=700):
-            st.session_state.continent = "North America"
+        if st.session_state.continent == "North America":
+            st.button("North America", width=700, type="primary")
+        else:
+            if st.button("North America", width=700):
+                st.session_state.continent = "North America"
+                st.rerun()
     with col[1]:
-        if st.button("South America", width=700):
-            st.session_state.continent = "South America"
+        if st.session_state.continent == "South America":
+            st.button("South America", width=700, type="primary")
+        else:
+            if st.button("South America", width=700):
+                st.session_state.continent = "South America"
+                st.rerun()
 
     return st.session_state.continent
-
 
 
 def country_filter(countries_list):
@@ -38,13 +60,13 @@ def country_filter(countries_list):
     with col1:
         country1 = st.selectbox(label="Filter by country", options=countries_list)
     with col2:
-        country2 = st.selectbox(label="Select another country to compare", options=countries_list)
+        country2 = st.selectbox(label="Filter by second country to compare", options=countries_list)
 
     # create list of chosen countries, no chosen countries -> returns empty list
     selected_countries = []
-    if country1 and country1 !="Alla":
+    if country1 and country1 !="All":
         selected_countries.append(country1)
-    if country2 and country2 !="Alla" and country2 != country1:
+    if country2 and country2 !="All" and country2 != country1:
         selected_countries.append(country2)
 
     return selected_countries
@@ -70,7 +92,7 @@ def date_filter(date_list):
 def reset_filters_streams(date_list):
     """Create a button to reset filters"""
     if st.button("Reset", width=200):
-        st.session_state.continent = "Alla"
+        st.session_state.continent = "All"
         st.session_state.selected_countries = []
 
         # increase counter to create new key for date slider (help from llm)
