@@ -68,6 +68,20 @@ streamlit run src/dashboard/Rewind.py
 
 ## EDAs and Datasets
 
+We explored several datasets during this project. You can find our exploratory data analyses here:
+[EDA Notebooks](https://github.com/JohnnyHyytiainen/DEUX2025_music_project/tree/main/notebooks)
+
+### Music Datasets
+[Format Sales](https://www.kaggle.com/datasets/thedevastator/music-sales-data) — RIAA data on music format sales from 1973 to 2019, covering units sold and revenue across physical and digital formats.
+
+[Top Spotify Songs in 73 Countries](https://www.kaggle.com/datasets/asaniczka/top-spotify-songs-in-73-countries-daily-updated/versions/493) — Daily updated rankings of the most streamed songs across 73 countries.
+
+[Spotify Charts](https://www.kaggle.com/datasets/dhruvildave/spotify-charts) — Historical Spotify chart data including streams and chart positions by country.
+
+### Supporting Dataset
+[Country Codes Alpha-2 and Alpha-3](https://www.kaggle.com/datasets/emolodov/country-codes-alpha2-alpha3) — Used to join and map country data via ISO codes.
+
+
 
 ## Team (DE25)
 * **[Anja](https://github.com/Anja-Sche)**    - Data Engineer
