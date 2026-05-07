@@ -5,21 +5,25 @@ from components.queries.queries_streams import get_countries_list_query, get_dat
 from components.filter.filters_streams import continent_filter, country_filter, date_filter, reset_filters_streams,format_streams_table
 from components.charts.charts_streams import streams_over_time_line_chart
 
+# create column for reset button
 r_col1, r_col2 = st.columns([18, 1])
 
+# collect data for continents and dates
 df_cont = fetch_data(get_continent_list_query())
 continents = ["Alla"] + df_cont["continent"].tolist()
 
 df_dates = fetch_data(get_date_list_query())
 dates = df_dates["snapshot_date"].tolist()
 
+# add reset button in column
 with r_col2:
     reset_filters_streams(dates)
 
 
-
+# create columns for toplist and filters
 col1, col2, col3 = st.columns([5, 1, 8])
 
+# add filters to the page in column 3
 with col3:
     st.markdown("### Filters")
 
@@ -35,16 +39,19 @@ with col3:
 
     start_date, end_date = date_filter(dates)
 
+# add table to page in column one
 with col1:
     st.markdown("### Top 5 most streamed")
 
     df = fetch_data(table_query(selected_cont, selected_countries, start_date, end_date))
     df.index = df.index + 1
     df['Streams'] = df['Streams'].apply(format_streams_table)
+
+    # set width to columns in table
     st.dataframe(df,
                  column_config={df.columns[0]: st.column_config.Column(width=130),
                                 df.columns[1]: st.column_config.Column(width=140),}
                  )
 
-
+# add line chart
 st.plotly_chart(streams_over_time_line_chart(selected_cont, selected_countries, start_date, end_date))
