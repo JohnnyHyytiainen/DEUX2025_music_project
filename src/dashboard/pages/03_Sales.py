@@ -31,15 +31,11 @@ cols = st.columns([70, 30])
 with cols[0]:
     chart_placeholder = st.empty()
 with cols[1]:
-    kpi_placeholder = st.empty()
-    create_row_space(6)
     with st.container(border=True):
         formats = format_filter()
         years = year_filter()
         metric = metrics_filter()
 
-with kpi_placeholder:
-    dominate_format_kpi(metric, formats, years)
 with chart_placeholder:
     format_over_time_line_chart(metric, formats, years)
 st.caption("""
