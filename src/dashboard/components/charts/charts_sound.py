@@ -1,5 +1,6 @@
 import streamlit as st
 from components.data_loader import fetch_data
+import base64
 
 def top_songs_profile_list(
         speechiness_max=80,
@@ -100,3 +101,24 @@ def top_country_profile_chart(
         )
 
     return
+
+def spotify_button(spotify_id):
+        spotify_url = f"https://open.spotify.com/track/{spotify_id}"
+        try:
+            with open("assets/pictures/Spotifybutton.svg", "r", encoding="utf-8") as svg_file:
+                svg_content = svg_file.read()
+
+
+                st.markdown(
+f"""
+<div style="max-width: 150px; cursor: pointer;">
+<a href="{spotify_url}" target="_blank">
+{svg_content}
+</a>
+</div>
+""",
+                unsafe_allow_html=True
+                )
+        
+        except FileNotFoundError:
+            st.error("Kunde inte hitta bilden Spotifybutton.svg")

@@ -1,7 +1,7 @@
 import streamlit as st
 from components.data_loader import fetch_data
 from components.queries.queries_physical_media import get_media_sales_query
-from components.charts.charts_sound import top_country_profile_chart, top_songs_profile_list
+from components.charts.charts_sound import top_country_profile_chart, top_songs_profile_list, spotify_button
 from components.filter.filter_sound import procent_slider, vertical_procent_slider, vertical_bpm_slider, vertical_loudness_slider, explicit_chooser, mode_chooser
 
 st.set_page_config(page_title="Sounds", page_icon="🎶", layout="wide")
@@ -16,7 +16,7 @@ area2_col1, area2_col2 = st.columns([30, 70])
 
 with area2_col2:
     # BEST MATCH + SPOTIFY LINK (PLACEHOLDERS)
-    area2_col2_row1_obj1, area2_col2_row1_obj2 = st.columns([60, 20])
+    area2_col2_row1_obj1, area2_col2_row1_obj2 = st.columns([70, 30],vertical_alignment="top")
     st.subheader("Filter by audio features",text_alignment="center")
 
     #SLIDERS
@@ -55,14 +55,19 @@ with area2_col1:
         mode=is_mode
     )
 
-# BEST MATCH
-with area2_col2_row1_obj1:
-    if df_returned is not None and not df_returned.empty:
-        best_song = df_returned.iloc[0]["Song"]
-        best_artist = df_returned.iloc[0]["Artist"]
-        st.subheader("Best match")
+# BEST MATCH & SPOTIFY LINK
+if df_returned is not None and not df_returned.empty:
+    best_song = df_returned.iloc[0]["Song"]
+    best_artist = df_returned.iloc[0]["Artist"]
+    best_id = df_returned.iloc[0]["Spotify_ID"]
+    
+    # BEST MATCH
+    with area2_col2_row1_obj1:
         with st.container(border=True):
             st.metric(label=best_artist, value=best_song)
+
+    with area2_col2_row1_obj2:
+        spotify_button(best_id)
 
 # AREA 3 - CHART
 area3_col1 = st.container()
