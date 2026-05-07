@@ -1,7 +1,4 @@
-from operator import concat
-
 import streamlit as st
-from click import style
 from components.charts.charts_sales import (
     format_over_time_line_chart,
     total_sales_kpi,
@@ -15,18 +12,11 @@ from utils.helpers import read_textfile, read_css
 from utils.constants import MARKDOWN_PATH, STYLE_PATH
 
 
-
 st.set_page_config(page_title="Sales format over time", layout="wide")
 
 st.markdown(read_textfile(MARKDOWN_PATH / "sales_intro.md"))
 
-
 st.markdown("""*Hover on the lines to see fun facts*""")
-
-def create_row_space(spaces=10):
-    for i in range(spaces):
-        st.write("")
-
 cols = st.columns([70, 30])
 with cols[0]:
     chart_placeholder = st.empty()
@@ -38,7 +28,7 @@ with cols[1]:
 
 with chart_placeholder:
     format_over_time_line_chart(metric, formats, years)
-st.caption("""
+st.caption(""">
     Fun fact sources:
     RIAA(Recording Industry Association of America) — riaa.com |
     BPI(British Phonographic Industry) — bpi.co.uk |
@@ -63,5 +53,3 @@ format_lifespan_table()
 format_lifespan_chart()
 
 read_css(STYLE_PATH / "style.css")
-
-
