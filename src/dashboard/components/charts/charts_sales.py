@@ -10,6 +10,16 @@ from components.queries.queries_sales import get_all_media_sales, get_format_lif
 
 df = fetch_data(get_all_media_sales())
 
+color_map = {
+    'CD': '#85817B',
+    'Cassette': '#CE917A',
+    'Vinyl': '#C25A4F',
+    '8-Track': '#784E50',
+    'Download': '#77989C',
+    'Streaming': '#DAB576',
+    'Radio': '#B33A38'
+}
+
 
 def format_over_time_line_chart(metric, formats, years):
     dff = df.query("metric == @metric and format in @formats and year >= @years[0] and year <= @years[1]")
@@ -48,7 +58,7 @@ def format_over_time_line_chart(metric, formats, years):
     with st.container(border=True):
         st.markdown("Format over years")
 
-        fig = px.line(dff, x='year', y='value', color='format', custom_data=['fun_fact'])
+        fig = px.line(dff, x='year', y='value', color='format',color_discrete_map=color_map, custom_data=['fun_fact'])
 
         fig.update_traces(
             hovertemplate="<b>%{x}</b><br>Value: %{y}<br>%{customdata[0]}<extra></extra>"
@@ -122,11 +132,17 @@ def total_units_revenue_bar_chart(formats, years, metrics, labels):
 
     format_order = dff_combined.groupby('format')['value'].sum().sort_values(ascending=False).index.tolist()
 
+    color_map_bar = {
+        'Total revenue in USD': '#DAB576',
+        'Total sales in units': '#B33A38'
+    }
+
     fig = px.bar(
         dff_combined,
         x='value',
         y='format',
         color='metric',
+        color_discrete_map=color_map_bar,
         barmode='group',
         title='Total value USD and Units sold',
         labels={'value': 'Value in USD and units sold', 'format': 'Format'},
@@ -146,6 +162,7 @@ def format_lifespan_chart():
         y='format',
         base='first_year',
         color='format',
+        color_discrete_map=color_map,
         orientation='h',
         title='Format Lifespan',
         labels={'lifespan': 'Years active', 'format': 'Format'}

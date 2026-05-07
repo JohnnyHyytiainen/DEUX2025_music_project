@@ -14,4 +14,4 @@ The dataset captures one of the most dramatic transformations in media history, 
 
 ### How to use this dashboard
 
-Use the filters on the right to select formats, adjust the time period and switch between units sold and revenue. Hover over the line chart to reveal historical fun facts tied to specific years.
+Use the filters on the right to select formats, adjust the time period and switch between units sold, revenue and revenue adjusted to inflation. Hover over the line chart to reveal historical fun facts tied to specific years.
