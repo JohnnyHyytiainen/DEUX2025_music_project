@@ -8,49 +8,19 @@ def continent_filter(continents):
 
     col = st.columns(3)
 
-    # if continent is chosen, button will get another color (to show what filter is shown)
-    with col[2]:
-        if st.session_state.continent == "Europe":
-            st.button("Europe", width=700, type="primary")
-        else:
-            if st.button("Europe", width=700):
-                st.session_state.continent = "Europe"
-                st.rerun()
-    with col[0]:
-        if st.session_state.continent == "Asia":
-            st.button("Asia", width=700, type="primary")
-        else:
-            if st.button("Asia", width=700):
-                st.session_state.continent = "Asia"
-                st.rerun()
-    with col[1]:
-        if st.session_state.continent == "Africa":
-            st.button("Africa", width=700, type="primary")
-        else:
-            if st.button("Africa", width=700):
-                st.session_state.continent = "Africa"
-                st.rerun()
-    with col[2]:
-        if st.session_state.continent == "Oceania":
-            st.button("Oceania", width=700, type="primary")
-        else:
-            if st.button("Oceania", width=700):
-                st.session_state.continent = "Oceania"
-                st.rerun()
-    with col[0]:
-        if st.session_state.continent == "North America":
-            st.button("North America", width=700, type="primary")
-        else:
-            if st.button("North America", width=700):
-                st.session_state.continent = "North America"
-                st.rerun()
-    with col[1]:
-        if st.session_state.continent == "South America":
-            st.button("South America", width=700, type="primary")
-        else:
-            if st.button("South America", width=700):
-                st.session_state.continent = "South America"
-                st.rerun()
+    # create order for show
+    custom_order = ["Asia", "Africa", "Europe", "North America", "South America", "Oceania"]
+
+    # loop through all continents. Clicked button -> different color
+    for i, continent_name in enumerate(custom_order):
+        # divide in to columns
+        with col[i % 3]:
+            if st.session_state.continent == continent_name:
+                st.button(continent_name, width=700, type="primary")
+            else:
+                if st.button(continent_name, width=700):
+                    st.session_state.continent = continent_name
+                    st.rerun()
 
     return st.session_state.continent
 
