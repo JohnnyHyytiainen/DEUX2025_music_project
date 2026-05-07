@@ -63,8 +63,10 @@ uv sync
 **3. Run the Streamlit Dashboard**
 Our `data_loader` will automatically locate the `data/parquet/` directory and mount the data into a temporary DuckDB instance.
 ```bash
-streamlit run src/dashboard/app.py
+streamlit run src/dashboard/Rewind.py
 ```
+
+## EDAs and Datasets
 
 
 ## Team (DE25)

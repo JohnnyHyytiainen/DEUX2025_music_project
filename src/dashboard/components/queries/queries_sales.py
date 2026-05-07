@@ -1,4 +1,4 @@
-# Script för att göra queries som ska synas på 03_Sales.py sidan
+# Script för att göra queries som ska synas på 02_Sales.py sidan
 # Kommentarer: Svenska
 # Kod: Engelska
 
