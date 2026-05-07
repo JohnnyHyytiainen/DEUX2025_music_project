@@ -4,10 +4,10 @@ Music is a mirror of culture and identity. This dashboard, created in collaborat
 
 ### Explore the Dashboard
 Navigate through the menu to explore different perspectives:
-*   **Streams** shows the performance and patterns of viral hits over time. (Data source?)
-*   **Sales** explores the evolution from vinyl to the streaming era. (Data source?)
-*   **Sound** lets you mix and match music characteristics to discover new artist. (Data source?)
-*   **Geek Out** and dive into cultural differences and music trends worldwide. (Data source?)
+*   **Streams** shows the performance and patterns of viral hits over time.
+*   **Sales** explores the evolution from vinyl to the streaming era.
+*   **Sound** lets you mix and match music characteristics to discover new artist.
+*   **Geek Out** and dive into cultural differences and music trends worldwide.
 
 ### Technical Note
 Built on a local Data Lakehouse architecture, this dashboard connects live to an analytical database (DuckDB) containing nearly 30 million rows of data.

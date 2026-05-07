@@ -22,15 +22,20 @@ color_map = {
 
 
 def format_over_time_line_chart(metric, formats, years):
+    """
+    Renders a line chart showing format sales over time with historical fun facts.
+
+    Args:
+        metric (str): The metric to display. Options: 'Units', 'Value', 'Value (Adjusted)'.
+        formats (list): List of format names to include, e.g. ['CD', 'Vinyl', 'Streaming'].
+        years (tuple): Year range as (start, end), e.g. (1973, 2019).
+
+    Example:
+        format_over_time_line_chart('Value', ['CD', 'Vinyl'], (1980, 2010))
+    """
+
     dff = df.query("metric == @metric and format in @formats and year >= @years[0] and year <= @years[1]")
     dff = dff.groupby(['year', 'format'])['value'].sum().reset_index()
-
-    #sources:
-    #RIAA(Recording Industry Association of America) — riaa.com
-    #BPI(British Phonographic Industry) — bpi.co.uk
-    #Billboard — billboard.com
-    #Rolling Stone — rollingstone.com
-    #Spotify Newsroom — newsroom.spotify.com
 
     fun_facts = {
         1973: 'The 8-Track format peaks — over 40 million players sold in the US alone',
@@ -89,6 +94,19 @@ def format_over_time_line_chart(metric, formats, years):
         st.plotly_chart(fig, use_container_width=True)
 
 def total_sales_kpi(metric, formats, years, label):
+    """
+    Renders a KPI metric showing total sales in units or revenue for selected filters.
+
+    Args:
+        metric (str): The metric to sum. Options: 'Units', 'Value', 'Value (Adjusted)'.
+        formats (list): List of format names to include, e.g. ['CD', 'Streaming'].
+        years (tuple): Year range as (start, end), e.g. (1990, 2010).
+        label (str): The label displayed above the KPI value, e.g. 'Total revenue in USD'.
+
+    Example:
+        total_sales_kpi('Value', ['CD'], (1990, 2005), 'Total revenue in USD')
+    """
+
     format_list = "', '".join(formats)
     total_sales = duckdb.sql(f"""--sql
         SELECT
@@ -103,6 +121,18 @@ def total_sales_kpi(metric, formats, years, label):
     st.metric(label=label, value=f"{total_sales['total_sales']:,.0f} Million",border=True)
 
 def dominate_format_kpi(metric, formats, years):
+    """
+    Renders a KPI metric showing the format with the highest total sales for selected filters.
+
+    Args:
+        metric (str): The metric to rank by. Options: 'Units', 'Value', 'Value (Adjusted)'.
+        formats (list): List of format names to include, e.g. ['CD', 'Cassette', 'Vinyl'].
+        years (tuple): Year range as (start, end), e.g. (1973, 2019).
+
+    Example:
+        dominate_format_kpi('Value (Adjusted)', ['CD', 'Cassette', 'Vinyl'], (1973, 2019))
+    """
+
     format_list = "', '".join(formats)
     dominant = duckdb.sql(f"""--sql
         SELECT
@@ -121,6 +151,19 @@ def dominate_format_kpi(metric, formats, years):
     st.metric(label="Dominate format", value=dominant['format'], border=True)
 
 def total_units_revenue_bar_chart(formats, years, metrics, labels):
+    """
+    Renders a grouped horizontal bar chart comparing total units sold and revenue by format.
+
+    Args:
+        formats (list): List of format names to include, e.g. ['CD', 'Vinyl', 'Streaming'].
+        years (tuple): Year range as (start, end), e.g. (1973, 2019).
+        metrics (list): List of metric names. Options: 'Units', 'Value', 'Value (Adjusted)'.
+        labels (list): Display labels for each metric, e.g. ['Total sales in units', 'Total revenue in USD'].
+
+    Example:
+        total_units_revenue_bar_chart(['CD', 'Vinyl'], (1980, 2010), ['Units', 'Value'], ['Total sales in units', 'Total revenue in USD'])
+    """
+
     dfs = []
     for m, label in zip(metrics, labels):
         dff = df.query("metric == @m and format in @formats and year >= @years[0] and year <= @years[1]")
@@ -154,6 +197,8 @@ def total_units_revenue_bar_chart(formats, years, metrics, labels):
 
 
 def format_lifespan_chart():
+    """Renders a horizontal bar chart showing the active lifespan of each music format."""
+
     dff = duckdb.sql(get_format_lifespan_query()).df()
 
     fig = px.bar(
@@ -174,6 +219,8 @@ def format_lifespan_chart():
         st.plotly_chart(fig, use_container_width=True)
 
 def format_lifespan_table():
+    """Renders a table showing first year, last year, lifespan, peak year and peak revenue per format."""
+
     dff = duckdb.sql(get_format_lifespan_query()).df()
     dff['peak_value'] = dff['peak_value'].astype(int)
     st.table(dff.rename(columns={

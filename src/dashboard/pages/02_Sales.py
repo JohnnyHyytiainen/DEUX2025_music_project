@@ -17,10 +17,6 @@ st.set_page_config(page_title="Sales format over time", layout="wide")
 st.markdown(read_textfile(MARKDOWN_PATH / "sales_intro.md"))
 
 st.markdown("""*Hover on the lines to see fun facts*""")
-def create_row_space(spaces=10):
-    for i in range(spaces):
-        st.write("")
-
 cols = st.columns([70, 30])
 with cols[0]:
     chart_placeholder = st.empty()
