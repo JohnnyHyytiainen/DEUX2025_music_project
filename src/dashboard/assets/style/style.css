@@ -80,3 +80,8 @@ h3 *,
     font-family: 'Atkinson Hyperlegible', sans-serif !important;
     font-size: 14px !important;
 }
+
+.stButton button[kind="primary"] {
+    background-color: #CE917A !important;
+    color: black !important;
+}
