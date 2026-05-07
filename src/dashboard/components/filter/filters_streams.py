@@ -2,6 +2,9 @@ import streamlit as st
 
 
 def continent_filter(continents):
+    if "continent" not in st.session_state:
+        st.session_state.continent = "Alla"
+
     col = st.columns(3)
     with col[2]:
         if st.button("Europe", width=700):
@@ -42,10 +45,51 @@ def country_filter(countries_list):
     return selected_countries
 
 
+# def date_filter(date_list):
+#     if "selected_dates" not in st.session_state:
+#         st.session_state.selected_dates = (date_list[0], date_list[-1])
+#
+#     current_value = st.session_state.selected_dates
+#
+#     new_value  = st.select_slider(
+#         label="Filter by dates",
+#         options=date_list,
+#         value=st.session_state.selected_dates
+#     )
+#
+#     if new_value != current_value:
+#         st.session_state.selected_dates = new_value
+#
+#     return st.session_state.selected_dates
+
 def date_filter(date_list):
-    #return st.selectbox(label="Filter by date", options=date_list)
+    # Skapa en unik key baserat på reset_counter
+    if "reset_counter" not in st.session_state:
+        st.session_state.reset_counter = 0
+
+    key = f"date_slider_{st.session_state.reset_counter}"
 
     return st.select_slider(
         label="Filter by dates",
         options=date_list,
-        value=(date_list[0], date_list[-1]))
+        value=(date_list[0], date_list[-1]),
+        key=key  # ← ny key varje gång reset trycks
+    )
+
+def reset_filters_streams(date_list):
+    if st.button("Reset", width=200):
+        st.session_state.continent = "Alla"
+        st.session_state.selected_countries = []
+        if "reset_counter" not in st.session_state:
+            st.session_state.reset_counter = 0
+        st.session_state.reset_counter += 1  # ← ändrar key varje gång
+        st.rerun()
+
+
+def format_streams_table(number):
+    if number >= 1_000_000:
+        return f"{number/1_000_000:.1f}M"
+    elif number >= 1_000:
+        return f"{number/1_000:.1f}K"
+    else:
+        return str(int(number))
