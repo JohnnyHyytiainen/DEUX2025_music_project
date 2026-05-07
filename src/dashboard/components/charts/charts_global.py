@@ -195,6 +195,7 @@ def create_audio_signature_radar(df):
     )
 
     fig.update_layout(
+        height=550,
         polar=dict(
             bgcolor=BG_PLOT_DARK,
             radialaxis=dict(
@@ -210,7 +211,7 @@ def create_audio_signature_radar(df):
         ),
         paper_bgcolor=BG_TRANSPARENT,
         plot_bgcolor=BG_TRANSPARENT,
-        showlegend=True,
+        showlegend=False,
         title="Audio Signature (DNA)",
         hovermode="closest",
     )
