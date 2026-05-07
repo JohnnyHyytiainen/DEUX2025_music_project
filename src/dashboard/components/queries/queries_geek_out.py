@@ -1,4 +1,4 @@
-# Script för att göra queries som ska synas på 01_🌍_Global_EDA.py sidan.
+# Script för att göra queries som ska synas på 04_Geek_Out.py sidan.
 # Kommentarer: Svenska
 # Kod: Engelska
 

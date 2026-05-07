@@ -54,7 +54,7 @@ cd DEUX2025_music_project
 ```
 
 **2. Install dependencies**
-We recommend using `uv` for lightning-fast dependency resolution, but standard `pip` works as well[cite: 5].
+We recommend using `uv` for lightning-fast dependency resolution, but standard `pip` works as well.
 ```bash
 uv sync 
 # OR: pip install -r requirements.txt
