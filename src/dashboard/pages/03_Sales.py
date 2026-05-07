@@ -32,9 +32,9 @@ with cols[0]:
 with cols[1]:
     kpi_placeholder = st.empty()
     create_row_space(6)
+    formats = format_filter()
     years = year_filter()
     metric = metrics_filter()
-    formats = format_filter()
 
 with kpi_placeholder:
     dominate_format_kpi(metric, formats, years)

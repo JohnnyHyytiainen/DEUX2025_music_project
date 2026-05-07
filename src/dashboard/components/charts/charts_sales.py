@@ -77,8 +77,8 @@ def format_over_time_line_chart(metric, formats, years):
                 y0=0,
                 y1=1,
                 yref="paper",
-                line=dict(dash="dot", color="white", width=2),
-                opacity=0.6,
+                line=dict(dash="dot", color="grey", width=2),
+                opacity=0.8,
             )
 
         #Makes the tooltip window bigger

@@ -7,14 +7,32 @@ df = fetch_data(get_all_media_sales())
 def metrics_filter():
     return st.selectbox(label='Select metric', options=df['metric'].unique(), )
 
+
 def format_filter():
     options = df['format'].unique().tolist()
-    return st.pills(
-        label='Select formats',
-        options=options,
-        default=options,
-        selection_mode='multi'
-    )
+
+    all_selected = st.toggle('Select all', value=True)
+
+    if all_selected:
+        selected = st.pills(
+            label='Select formats',
+            options=options,
+            default=options,
+            selection_mode='multi'
+        )
+    else:
+        selected = st.pills(
+            label='Select formats',
+            options=options,
+            default=options[0],
+            selection_mode='multi'
+        )
+
+    if not selected:
+        st.warning('Select at least one format')
+        return options[0:1]
+
+    return selected
 
 def year_filter():
     return st.slider(
