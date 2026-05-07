@@ -11,22 +11,6 @@ from components.queries.queries_sales import get_all_media_sales, get_format_lif
 df = fetch_data(get_all_media_sales())
 
 
-#TODO: Change to lifetime span of different formats
-df_peak_year = duckdb.sql("""--sql
-    SELECT DISTINCT ON (format, metric)
-        format,
-        metric,
-        year,
-        value as peak_value
-    FROM df
-    ORDER BY format, metric, peak_value DESC
-                                   """).df()
-
-def peak_table(number_format = 10):
-    with st.container(border=True):
-        st.markdown("Top peak year by format")
-        st.table(df_peak_year.head(number_format))
-
 def format_over_time_line_chart(metric, formats, years):
     dff = df.query("metric == @metric and format in @formats and year >= @years[0] and year <= @years[1]")
     dff = dff.groupby(['year', 'format'])['value'].sum().reset_index()
@@ -40,7 +24,9 @@ def format_over_time_line_chart(metric, formats, years):
 
     fun_facts = {
         1973: 'The 8-Track format peaks — over 40 million players sold in the US alone',
+        1976: 'Cassette sales overtake 8-Track for the first time — the format never recovers',
         1977: 'Vinyl hits its golden era — Saturday Night Fever becomes one of the best-selling albums ever',
+        1980: '8-Track is officially dead — no major label releases new titles on the format',
         1983: 'The CD is commercially launched — Dire Straits Brothers in Arms becomes first CD to sell 1 million copies',
         1988: 'Cassette outsells vinyl for the first time in history',
         1991: 'CD overtakes cassette in sales for the first time',
@@ -149,6 +135,7 @@ def total_units_revenue_bar_chart(formats, years, metrics, labels):
 
     with st.container(border=True):
         st.plotly_chart(fig, use_container_width=True)
+
 
 def format_lifespan_chart():
     dff = duckdb.sql(get_format_lifespan_query()).df()

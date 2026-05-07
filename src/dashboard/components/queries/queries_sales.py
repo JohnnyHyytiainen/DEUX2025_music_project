@@ -36,10 +36,9 @@ def get_all_media_sales() -> str:
                    WHEN format = '8 - Track' THEN '8-Track'
                    WHEN format IN ('Download Single', 'Download Album', 'Download Music Video', 'Kiosk', 'Ringtones & Ringbacks') THEN 'Download'
                    WHEN format IN ('Paid Subscriptions', 'Limited Tier Paid Subscription', 'Paid Subscription', 'On-Demand Streaming (Ad-Supported)', 'Other Ad-Supported Streaming') THEN 'Streaming'
-                   WHEN format IN ('SoundExchange Distributions', 'Synchronization', 'Other Digital') THEN 'Radio'
                    END AS format
                FROM silver_music_format_sales
-               WHERE format NOT IN ('Music Video (Physical)', 'DVD Audio')
+               WHERE format NOT IN ('Music Video (Physical)', 'DVD Audio', 'SoundExchange Distributions', 'Synchronization', 'Other Digital') AND value > 0
            )
            WHERE format IS NOT NULL
            """
@@ -52,7 +51,7 @@ def get_format_lifespan_query():
         MAX(year) as last_year,
         MAX(year) - MIN(year) as lifespan,
         FIRST(year ORDER BY value DESC) as peak_year,
-        MAX(value) as peak_value
+        ROUND(MAX(value), 1) as peak_value
     FROM df
     WHERE metric = 'Units'
     AND format IN ('CD', '8-Track', 'Vinyl', 'Cassette', 'Download', 'Streaming')
