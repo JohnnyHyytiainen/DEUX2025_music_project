@@ -16,11 +16,11 @@ QUERIES_PATH = COMPONENTS_PATH / "queries"
 # ===============================
 # FÄRGSKALOR & TEMA GLOBAL PAGES
 # -- Färgskalor för spektrum-grafer (Gradienter) --
-SCALE_MOOD = ["#1A1A95", "#CBC835"]  # Melankolisk (Blå) -> Glad (Gul)
+SCALE_MOOD = ["#4B4BFF", "#E1CC2A"]  # Melankolisk (Blå) -> Glad (Gul)
 SCALE_TEMPO = ["#4B4BFF", "#FF4B4B"]  # Långsam (Ljusblå) -> Snabb (Röd)
 SCALE_ACOUSTIC = ["#8A2BE2", "#2E8B57"]  # Elektronisk (Lila) -> Akustisk (Grön)
-SCALE_EXPLICIT = "Purples"  # Plotlys inbyggda lila skala
-SCALE_SCATTER = "Burgyl"  # För Dancefloor scatter
+SCALE_EXPLICIT = "Picnic"  # Plotlys inbyggda lila skala
+SCALE_SCATTER = "bluered"  # För Dancefloor scatter
 
 # -- Specifika färger --
 COLOR_RADAR = ["#1DB954", "#8A2BE2"]  # Spotify-grön och Synth-lila

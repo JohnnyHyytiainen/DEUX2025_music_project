@@ -131,7 +131,6 @@ def create_dancefloor_scatter(df):
             "Danceability": "Danceability Index (0-100)",
             "Energy": "Energy Index (0-100)",
         },
-        title="The Global Dancefloor: Energy vs. Danceability",
     )
     fig.update_layout(
         coloraxis_showscale=False,
@@ -195,6 +194,7 @@ def create_audio_signature_radar(df):
     )
 
     fig.update_layout(
+        height=550,
         polar=dict(
             bgcolor=BG_PLOT_DARK,
             radialaxis=dict(
@@ -210,7 +210,7 @@ def create_audio_signature_radar(df):
         ),
         paper_bgcolor=BG_TRANSPARENT,
         plot_bgcolor=BG_TRANSPARENT,
-        showlegend=True,
+        showlegend=False,
         title="Audio Signature (DNA)",
         hovermode="closest",
     )

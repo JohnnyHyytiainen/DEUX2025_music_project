@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
+.block-container {
+    padding-top: 2rem;
+}
+
+/* Body (Atkinson Hyperlegible, Regular, 20px) */
+html, body, p, div, span, li {
+    font-family: 'Atkinson Hyperlegible', sans-serif !important;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+/* H1 (Urbanist, Bold, 92px) */
+h1, 
+h1 *, 
+[data-testid="stHeadingWithActionElements"] h1 {
+    font-family: 'Urbanist', sans-serif !important;
+    font-size: 92px !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+}
+
+/* H2 (Urbanist, Light, 40px) */
+h2, 
+h2 *, 
+[data-testid="stHeadingWithActionElements"] h2 {
+    font-family: 'Urbanist', sans-serif !important;
+    font-size: 40px !important;
+    font-weight: 300 !important;
+}
+
+/* TableTitle / H3 (Urbanist, Semibold, 24px) */
+h3, 
+h3 *, 
+[data-testid="stHeadingWithActionElements"] h3 {
+    font-family: 'Urbanist', sans-serif !important;
+    font-size: 24px !important;
+    font-weight: 600 !important;
+}
+
+/* Filterrubriker över sliders/radios (Atkinson, Regular, 14px) */
+[data-testid="stWidgetLabel"] p,
+[data-testid="stWidgetLabel"] p * {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+}
+
+/* Tooltips in graphs (Atkinson, Regular, 14px) */
+#vg-tooltip-element {
+    font-family: 'Atkinson Hyperlegible', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+}
+
+/* Restores Google icons-fonts */
+.material-icons,
+.material-symbols-rounded,
+[data-testid="collapsedControl"] span,
+[data-testid="stIconMaterial"] {
+    font-family: "Material Symbols Rounded", sans-serif !important;
+    font-size: 24px !important;
+}

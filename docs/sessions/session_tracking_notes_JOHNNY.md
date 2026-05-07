@@ -133,7 +133,7 @@
 - Refactor `src/dashboard/components/data_loader.py` script to read our .parquet files instead of our database
     - **Done**
 
-**Tuesday 05/04-2026**
+**Tuesday 05/05-2026**
 *Goals for today:*
 - Refactor `queries_global.py` script to adhear to DRY and modularity principles.
     - **Done**
@@ -148,4 +148,9 @@
     - **Done**
 
 - Start working on a radar chart for global page in streamlit dashboard
-    - *Ongoing*
+    - **Done**
+
+**Wednesday + Thursday 06/05 07/05-2026**
+*Goals for today:*
+- Refactor and polish everything.
+    - **Done**
