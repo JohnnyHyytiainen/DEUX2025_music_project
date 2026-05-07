@@ -7,19 +7,6 @@ from components.queries.queries_streams import get_countries_list_query, get_dat
 from components.filter.filters_streams import continent_filter, country_filter, date_filter, reset_filters_streams,format_streams_table
 from components.charts.charts_streams import streams_over_time_line_chart
 
-st.markdown("""
-    <style>
-    .stButton button[kind="primary"] {
-        background-color: #4CAF50 !important;
-        color: black !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# read css-file
-# with open("style.css") as f:
-#     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
 
 st.markdown(read_textfile(MARKDOWN_PATH / "streams_title.md"))
 
