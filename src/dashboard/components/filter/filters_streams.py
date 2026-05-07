@@ -8,6 +8,7 @@ def continent_filter(continents):
 
     col = st.columns(3)
 
+    # if continent is chosen, button will get another color (to show what filter is shown)
     with col[2]:
         if st.session_state.continent == "Europe":
             st.button("Europe", width=700, type="primary")

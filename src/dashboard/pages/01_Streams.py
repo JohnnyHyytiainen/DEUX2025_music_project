@@ -60,12 +60,7 @@ with col1:
     df = fetch_data(table_query(selected_cont, selected_countries, start_date, end_date))
     df.index = df.index + 1
     df['Streams'] = df['Streams'].apply(format_streams_table)
-
-    # set width to columns in table
-    st.dataframe(df,
-                 column_config={df.columns[0]: st.column_config.Column(width=140),
-                                df.columns[1]: st.column_config.Column(width=140),}
-                 )
+    st.table(df)
 
 # add line chart
 st.plotly_chart(streams_over_time_line_chart(selected_cont, selected_countries, start_date, end_date))
