@@ -1,6 +1,7 @@
 from operator import concat
 
 import streamlit as st
+from click import style
 from components.charts.charts_sales import (
     format_over_time_line_chart,
     total_sales_kpi,
@@ -10,8 +11,8 @@ from components.charts.charts_sales import (
     format_lifespan_chart
     )
 from components.filter.filters_sales import metrics_filter, year_filter, format_filter
-from utils.helpers import read_textfile
-from utils.constants import MARKDOWN_PATH
+from utils.helpers import read_textfile, read_css
+from utils.constants import MARKDOWN_PATH, STYLE_PATH
 
 
 
@@ -32,9 +33,10 @@ with cols[0]:
 with cols[1]:
     kpi_placeholder = st.empty()
     create_row_space(6)
-    formats = format_filter()
-    years = year_filter()
-    metric = metrics_filter()
+    with st.container(border=True):
+        formats = format_filter()
+        years = year_filter()
+        metric = metrics_filter()
 
 with kpi_placeholder:
     dominate_format_kpi(metric, formats, years)
@@ -52,7 +54,7 @@ st.caption("""
 metrics = ["Value", "Units"]
 labels = ["Total revenue in USD", "Total sales in units"]
 
-st.title("Barchart for revenue and units sold over time")
+st.title("Revenue and units sold total")
 cols = st.columns([70,30])
 with cols[0]:
     total_units_revenue_bar_chart(formats, years, metrics, labels)
@@ -63,3 +65,7 @@ with cols[1]:
 st.markdown(read_textfile(MARKDOWN_PATH / "sales_format_lifetime.md"))
 format_lifespan_table()
 format_lifespan_chart()
+
+read_css(STYLE_PATH / "style.css")
+
+

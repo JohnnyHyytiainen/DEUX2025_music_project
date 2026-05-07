@@ -176,6 +176,7 @@ def format_lifespan_chart():
 def format_lifespan_table():
     dff = duckdb.sql(get_format_lifespan_query()).df()
     st.dataframe(dff, column_config={
+        'format': 'Format',
         'first_year': 'First Year',
         'last_year': 'Last Year',
         'lifespan': 'Lifespan (years)',

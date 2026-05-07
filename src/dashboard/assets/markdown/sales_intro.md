@@ -1,6 +1,6 @@
 # Sales
 
-How we went from vinyl to streaming and what format we listened to between that
+The story of five decades of music formats, from Vinyl to Streaming
 
 ## About the data
 
