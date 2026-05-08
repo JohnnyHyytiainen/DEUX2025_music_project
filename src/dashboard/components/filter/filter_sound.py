@@ -1,18 +1,16 @@
 import streamlit as st
 import streamlit_vertical_slider as svs
 
-def bpm_slider():
-    return st.slider("Choose BPM:", 60, 200, (60, 200))
+def vertical_procent_slider(name:str)-> int:
+    """
+    Creates a custom vertical slider for selecting a percentage value.
 
-def procent_slider(name:str):
-    return st.slider(label=name,
-                     min_value=0.01, 
-                     max_value=1.00, 
-                     value=(0.01, 1.00), 
-                     format="percent", 
-                     step=0.01)
+    Args:
+        name (str): The label displayed above the slider.
 
-def vertical_procent_slider(name:str):
+    Returns:
+        int: The selected percentage value (ranging from 1 to 100).
+    """
     return svs.vertical_slider(label=name, 
                                thumb_shape="square",
                                height=100, 
@@ -25,7 +23,16 @@ def vertical_procent_slider(name:str):
                                track_color="#7B7B7B"
                                )
 
-def vertical_bpm_slider(name:str):
+def vertical_bpm_slider(name:str)-> int:
+    """
+    Creates a custom vertical slider for selecting a maximum BPM value.
+
+    Args:
+        name (str): The label displayed above the slider.
+
+    Returns:
+        int: The selected maximum BPM value (ranging from 0 to 236).
+    """
     return svs.vertical_slider(label=name, 
                                thumb_shape="square",
                                height=100, 
@@ -38,7 +45,16 @@ def vertical_bpm_slider(name:str):
                                track_color="#7B7B7B"
                                )
 
-def vertical_loudness_slider(name:str):
+def vertical_loudness_slider(name:str)-> int:
+    """
+    Creates a custom vertical slider for selecting a maximum loudness value.
+
+    Args:
+        name (str): The label displayed above the slider.
+
+    Returns:
+        int: The selected maximum loudness value in dBFS (ranging from -50 to 3).
+    """
     return svs.vertical_slider(label=name, 
                                thumb_shape="square",
                                height=100, 
@@ -51,10 +67,13 @@ def vertical_loudness_slider(name:str):
                                track_color="#7B7B7B"
                                )
 
-def fifty_slider(name:str):
-    return st.slider(name, 0, 1, (0, 100))
+def explicit_chooser()-> str:
+    """
+    Creates a segmented control button group to toggle explicit content filtering.
 
-def explicit_chooser():
+    Returns:
+        str: The selected censorship setting ("NO" or "YES").
+    """
     return st.segmented_control(
         label="Uncensorded",
         options=["NO", "YES"],
@@ -63,7 +82,13 @@ def explicit_chooser():
         required=True
         )
 
-def mode_chooser():
+def mode_chooser()-> str:
+    """
+    Creates a segmented control button group to select the musical mode.
+
+    Returns:
+        str: The selected musical mode ("Major" or "Minor").
+    """
     return st.segmented_control(label="Mode", options=["Major", "Minor"], selection_mode="single", default="Major", required=True)
 
 

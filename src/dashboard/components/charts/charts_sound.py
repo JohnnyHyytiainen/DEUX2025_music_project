@@ -4,19 +4,37 @@ from assets.style.py_style import style_toplist
 
 
 def top_songs_profile_list(
-        speechiness_max=80,
-        danceability_max=80,
-        liveness_max=80,
-        happiness_max=80,
-        tempo_max=180,
-        loudness_max=0,
-        explicit="NO",
-        mode="Major",
-        limit=10):        
-    speechiness = speechiness_max/100
-    danceability = danceability_max/100
-    liveness = liveness_max/100
-    happiness = happiness_max/100
+    speechiness_max=80,
+    danceability_max=80,
+    liveness_max=80,
+    happiness_max=80,
+    tempo_max=180,
+    loudness_max=0,
+    explicit="NO",
+    mode="Major",
+    limit=10,
+):
+    """
+    Fetches and displays a list of top songs matching a specific audio profile.
+
+    Args:
+        speechiness_max (float): Maximum allowed speechiness percentage (0-100). Defaults to 80.
+        danceability_max (float): Maximum allowed danceability percentage (0-100). Defaults to 80.
+        liveness_max (float): Maximum allowed liveness percentage (0-100). Defaults to 80.
+        happiness_max (float): Maximum allowed happiness/valence percentage (0-100). Defaults to 80.
+        tempo_max (float): Maximum allowed tempo in BPM. Defaults to 180.
+        loudness_max (float): Maximum allowed loudness in dBFS. Defaults to 0.
+        explicit (str): Filter for explicit content ("YES" or "NO"). Defaults to "NO".
+        mode (str): Musical mode ("Major" or "Minor"). Defaults to "Major".
+        limit (int): The maximum number of songs to fetch. Defaults to 10.
+
+    Returns:
+        Returns a DataFrame containing the unfiltered top songs data (including Spotify ID).
+    """
+    speechiness = speechiness_max / 100
+    danceability = danceability_max / 100
+    liveness = liveness_max / 100
+    happiness = happiness_max / 100
     expl_var = 0
     mode_var = 0
     expl_var = 1 if explicit == "YES" else 0
@@ -46,28 +64,51 @@ def top_songs_profile_list(
         if not df_top_songs_profile.empty:
             df_top_songs_profile.index = df_top_songs_profile.index + 1
 
-            df_to_show = df_top_songs_profile.drop(columns=["Popularity", "Artist", "Spotify_ID"])
+            df_to_show = df_top_songs_profile.drop(
+                columns=["Popularity", "Artist", "Spotify_ID"]
+            )
 
             st.table(df_to_show)
         else:
-            st.info("No songs found matching this exact profile. Try loosening the filters!")
+            st.info(
+                "No songs found matching this exact profile. Try loosening the filters!"
+            )
         return df_top_songs_profile
 
 
 def top_country_profile_chart(
-        speechiness_max=80,
-        danceability_max=80,
-        liveness_max=80,
-        happiness_max=80,
-        tempo_max=180,
-        loudness_max=0,
-        explicit="NO",
-        mode="Major",
-        limit=10):
-    speechiness = speechiness_max/100
-    danceability = danceability_max/100
-    liveness = liveness_max/100
-    happiness = happiness_max/100
+    speechiness_max=80,
+    danceability_max=80,
+    liveness_max=80,
+    happiness_max=80,
+    tempo_max=180,
+    loudness_max=0,
+    explicit="NO",
+    mode="Major",
+    limit=10,
+):
+    """
+    Fetches data and displays a bar chart of countries matching a specific audio profile.
+
+    Args:
+        speechiness_max (float): Maximum allowed speechiness percentage (0-100). Defaults to 80.
+        danceability_max (float): Maximum allowed danceability percentage (0-100). Defaults to 80.
+        liveness_max (float): Maximum allowed liveness percentage (0-100). Defaults to 80.
+        happiness_max (float): Maximum allowed happiness/valence percentage (0-100). Defaults to 80.
+        tempo_max (float): Maximum allowed tempo in BPM. Defaults to 180.
+        loudness_max (float): Maximum allowed loudness in dBFS. Defaults to 0.
+        explicit (str): Filter for explicit content ("YES" or "NO"). Defaults to "NO".
+        mode (str): Musical mode ("Major" or "Minor"). Defaults to "Major".
+        limit (int): The maximum number of countries to chart. Defaults to 10.
+
+    Returns:
+        None
+    """
+
+    speechiness = speechiness_max / 100
+    danceability = danceability_max / 100
+    liveness = liveness_max / 100
+    happiness = happiness_max / 100
     expl_var = 0
     mode_var = 0
     expl_var = 1 if explicit == "YES" else 0
@@ -100,28 +141,42 @@ def top_country_profile_chart(
             x_label=None,
             y_label=None,
             sort="-songs",
-            color="#B33A38"
+            color="#B33A38",
         )
 
     return
 
+
 def spotify_button(spotify_id):
-        spotify_url = f"https://open.spotify.com/track/{spotify_id}"
-        try:
-            with open("assets/pictures/Spotifybutton.svg", "r", encoding="utf-8") as svg_file:
-                svg_content = svg_file.read()
+    """
+    Renders an interactive SVG Spotify button in the Streamlit UI.
 
+    Reads a local SVG file and outputs it as a clickable HTML link 
+    that redirects the user to the specified Spotify track.
 
-                st.markdown(
-f"""
+    Args:
+        spotify_id (str): The unique Spotify ID of the track to link to.
+
+    Returns:
+        None
+    """
+    spotify_url = f"https://open.spotify.com/track/{spotify_id}"
+    try:
+        with open(
+            "assets/pictures/Spotifybutton.svg", "r", encoding="utf-8"
+        ) as svg_file:
+            svg_content = svg_file.read()
+
+            st.markdown(
+                f"""
 <div style="max-width: 150px; cursor: pointer;">
 <a href="{spotify_url}" target="_blank">
 {svg_content}
 </a>
 </div>
 """,
-                unsafe_allow_html=True
-                )
-        
-        except FileNotFoundError:
-            st.error("Kunde inte hitta bilden Spotifybutton.svg")
+                unsafe_allow_html=True,
+            )
+
+    except FileNotFoundError:
+        st.error("Kunde inte hitta bilden Spotifybutton.svg")
