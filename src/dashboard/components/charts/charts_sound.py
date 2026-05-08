@@ -12,8 +12,7 @@ def top_songs_profile_list(
     loudness_max=0,
     explicit="NO",
     mode="Major",
-    limit=10,
-):
+    limit=10,):
     """
     Fetches and displays a list of top songs matching a specific audio profile.
 
@@ -85,8 +84,7 @@ def top_country_profile_chart(
     loudness_max=0,
     explicit="NO",
     mode="Major",
-    limit=10,
-):
+    limit=10,):
     """
     Fetches data and displays a bar chart of countries matching a specific audio profile.
 
